@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Orbis Database Viewer</title>
+<style>
+:root { --navy:#10283b; --navy2:#163649; --mint:#0e9285; --ink:#20354a; --muted:#718497; --pale:#f6f8fa; --line:#e3e9ee; }
+* { box-sizing:border-box }
+html { scroll-behavior:smooth }
+body { margin:0; background:var(--pale); color:var(--ink); font-family:Inter,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif; font-size:14px; }
+button,input { font:inherit }
+button { cursor:pointer }
+button:focus-visible,input:focus-visible {outline:3px solid #66cbbd;outline-offset:2px}
+button:disabled {opacity:.55;cursor:not-allowed}
+.topbar { min-height:70px; display:flex; gap:16px; align-items:center; justify-content:space-between; padding:14px 29px; background:linear-gradient(105deg,#10273b,#14354b 75%,#174c51); color:#fff; }
+.brand {border:0;background:none;padding:0;color:#fff;text-align:left;display:flex;align-items:center;gap:12px}
+.brand-icon {height:34px;width:34px;border:1px solid #8ecec254;border-radius:10px;display:grid;place-items:center;color:#94e3d4;font-weight:900;font-size:22px}
+.brand-name {display:block;font-size:17px;font-weight:780;line-height:1.25}
+.brand-desc {display:block;color:#b5c9d4;font-size:10px;letter-spacing:.085em;margin-top:3px}
+.top-right {display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+.release {color:#bad4da;font-size:12px}
+.btn {border-radius:9px;border:1px solid #dce7e6;background:#fff;color:#27665e;padding:9px 14px;font-size:12px;font-weight:750;transition:background .15s}
+.btn:hover {background:#edf7f5}
+.btn.primary {background:#0e9385;color:#fff;border-color:#0e9385;padding:11px 18px}
+.btn.primary:hover {background:#06796f}
+.btn.dark {background:#ffffff18;color:#dcfff5;border:1px solid #ffffff39}
+.btn.dark:hover {background:#ffffff27}
+.layout {display:grid;grid-template-columns:236px minmax(0,1fr);align-items:stretch;min-height:calc(100vh - 70px)}
+/* 所有區塊由整個網頁捲動：不再有左側與內文兩條獨立垂直捲軸 */
+.sidebar {min-width:0;background:var(--navy);color:#c8d6e2;padding:27px 11px 50px;}
+.sidebar-head {padding:0 8px}
+.aside-kicker {display:flex;justify-content:space-between;gap:10px;color:#95b0bf;font-size:10px;font-weight:800;letter-spacing:.11em}
+.aside-kicker span:last-child {letter-spacing:normal;font-weight:700}
+.filter {width:100%;height:39px;margin:16px 0 15px;border:1px solid #395568;border-radius:9px;padding:0 12px;background:#0a2132;color:#e9f4f4;font-size:12px}
+.filter::placeholder {color:#93aab9}
+.side-note {color:#90a9b7;font-size:12px;line-height:1.8;margin:12px 6px 0}
+.db-nav {display:grid;gap:3px}
+.db-item {border:1px solid transparent;border-radius:9px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 9px;background:transparent;color:#d3e0e8;text-align:left;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.db-item:hover {background:#ffffff10}
+.db-item.active {background:#17494e;border-color:#4e9c9180;color:#fff;box-shadow:inset 3px 0 #70d8cb}
+.db-item .count {background:#ffffff13;color:#bdd4df;padding:2px 6px;border-radius:5px;font-size:10px;flex-shrink:0}
+.main {min-width:0;background:#f7f9fb}
+.page {max-width:1500px;padding:30px 34px 100px;margin:0 auto}
+.eyebrow {color:#0c9487;letter-spacing:.15em;font-size:11px;font-weight:770}
+h1 {font-size:clamp(24px,2.3vw,32px);letter-spacing:-.025em;margin:9px 0 13px;line-height:1.34;overflow-wrap:anywhere}
+h2 {margin:0;font-size:17px;line-height:1.5}
+p {line-height:1.8}
+.intro {background:linear-gradient(112deg,#fff,#f1fbf9);border:1px solid #deebe9;border-radius:15px;padding:28px 31px;box-shadow:0 6px 20px #163a5008}
+.intro p {color:#748898;margin:0}
+.picker {background:#fff;border:1px solid var(--line);border-radius:15px;padding:32px;max-width:720px;margin:23px auto 30px;text-align:center;box-shadow:0 7px 28px #1439550a}
+.picker h2 {font-size:20px;margin:0 0 10px}.picker p {color:#667e90;font-size:13px;margin:0 auto 20px;max-width:530px}
+.picker small {display:block;font-size:11px;color:#8798a5;margin-top:14px}
+.status {border:1px solid #cce4de;background:#eff9f6;color:#267668;border-radius:10px;padding:12px 15px;font-size:12px;margin:19px 0}
+.status.warn {background:#fff6e9;color:#9c6329;border-color:#f1e0c5}
+.status[hidden] {display:none}
+.error {background:#fff0ee;border:1px solid #f5d7d1;border-radius:12px;color:#9d453b;padding:14px 18px;margin-top:15px;line-height:1.7}
+.metrics {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:16px 0 0}
+.metric {background:#fff;border:1px solid var(--line);border-radius:12px;padding:15px 20px}
+.metric small {display:block;color:#8a9cab;margin-bottom:7px;font-weight:660}
+.metric strong {font-size:24px;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.sectionhead {display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:30px 2px 16px}
+.sectionhead small {color:#90a0b0}
+.cards {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.db-card {background:#fff;border:1px solid var(--line);border-radius:12px;padding:19px 20px;display:flex;flex-direction:column;text-align:left;min-width:0;transition:transform .15s,border-color .15s}
+.db-card:hover {border-color:#70cbbb;transform:translateY(-1px)}
+.card-title {font-weight:780;font-size:14px;overflow-wrap:anywhere}
+.card-desc {color:#7a8b9c;font-size:12px;line-height:1.65;margin:9px 0 17px;max-height:3.3em;overflow:hidden}
+.card-foot {display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:12px;border-top:1px solid #edf1f4;color:#8394a3;font-size:11px}
+.card-foot strong {color:#0c8f81;white-space:nowrap}
+.breadcrumb {display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:22px;color:#a1afba;font-size:12px}
+.crumb {border:0;background:none;color:#548074;padding:0;text-align:left}
+.crumb:hover {text-decoration:underline}
+.crumb.current {font-weight:650;color:#268577}
+.titleline {display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.version {display:inline-block;flex:0 0 auto;background:#e9f6f3;border:1px solid #d5e8e4;color:#208d81;padding:7px 12px;border-radius:20px;font-size:11px;font-weight:800;margin-top:10px}
+.descbox {color:#61788c;background:#fff;border:1px solid var(--line);border-left:3px solid #56b4a4;border-radius:0 11px 11px 0;margin:7px 0 22px;padding:15px 18px;line-height:1.75}
+.info-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 25px}
+.info {border:1px solid var(--line);border-radius:11px;background:#fff;padding:16px}
+.info small {display:block;color:#8899a7;font-size:11px;margin-bottom:7px}
+.info strong {font-size:20px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.panel {border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.panel-head {padding:17px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}
+.panel-head small {color:#8394a0}
+.table-list {width:100%;border-collapse:collapse;font-size:12px}
+.table-list th {color:#72899b;text-align:left;background:#f7fafb;padding:12px 16px}
+.table-list td {border-top:1px solid #edf1f4;padding:13px 16px;overflow-wrap:anywhere}
+.table-list td.right,.table-list th.right {text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.table-list tbody tr:hover {background:#f3faf8}
+.link {background:none;border:0;padding:0;text-align:left;color:#0e8d82;font-weight:760;overflow-wrap:anywhere}
+.link:hover {text-decoration:underline}
+.table-actions {display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;margin:22px 0 13px}
+.table-actions p {color:#8094a4;font-size:12px;margin:2px 0 0}
+/* 完整統計：在寬畫面縮減欄名/型態欄寬；較窄時改成直向欄位卡，永不產生水平捲軸 */
+.stats-wrap {background:#fff;border:1px solid var(--line);border-radius:12px;overflow:clip;container-type:inline-size}
+.stats-table {width:100%;table-layout:fixed;border-spacing:0;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}
+.stats-table th {text-align:right;background:#edf5f7;color:#5e7688;padding:11px 6px;border-bottom:1px solid #dae7eb;font-size:10px;overflow-wrap:anywhere}
+.stats-table td {border-bottom:1px solid #ebf0f3;padding:11px 6px;text-align:right;vertical-align:middle;white-space:normal;overflow-wrap:anywhere;word-break:break-word}
+.stats-table tbody tr:nth-child(even) {background:#f9fbfc}
+.stats-table tbody tr:hover {background:#eff8f5}
+.stats-table th:nth-child(1) {width:16%}.stats-table th:nth-child(2) {width:8%}
+.stats-table th:nth-child(3) {width:12%}.stats-table th:nth-child(4) {width:12%}
+.stats-table th:nth-child(5) {width:9%}.stats-table th:nth-child(6) {width:9%}
+.stats-table th:nth-child(7) {width:11%}.stats-table th:nth-child(8) {width:11%}.stats-table th:nth-child(9) {width:12%}
+.stats-table .name {text-align:left;font-weight:730;color:#245269;line-height:1.5;overflow-wrap:anywhere}
+.stats-table .type {text-align:left}
+.type-pill {font-size:10px;background:#eaf3fc;color:#437d9a;border:1px solid #dde9f4;border-radius:5px;padding:3px 4px;display:inline-block;overflow-wrap:anywhere}
+.type-pill.numeric {background:#f0eefb;border-color:#e5dffc;color:#7a62a5}
+.type-pill.time {background:#fff2e9;border-color:#f8e3d6;color:#a76e47}
+.dim {color:#b4c0c8}
+.smallnote {margin:14px 1px 0;font-size:11px;color:#8a9aa8;line-height:1.8}
+.empty {padding:27px;color:#8394a3;font-size:13px;text-align:center}
+[hidden] {display:none!important}
+@container (max-width:980px) {
+  .stats-table,.stats-table tbody {display:block}
+  .stats-table thead {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .stats-table tbody {padding:11px;display:grid;gap:10px}
+  .stats-table tbody tr {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 13px;border:1px solid #e0eaf0;border-radius:10px;padding:9px 13px;background:#fff}
+  .stats-table tbody td {display:block;background:none!important;min-width:0;text-align:left;border-bottom:1px solid #edf2f5;padding:9px 0;overflow-wrap:anywhere}
+  .stats-table tbody td::before {content:attr(data-label);display:block;color:#879caa;font-weight:750;font-size:10px;margin-bottom:5px}
+  .stats-table tbody td.name {grid-column:1/-1;border-bottom-color:#d8e8e5;font-size:13px}
+  .stats-table tbody td.name::before {display:none}
+  .stats-table tbody td:last-child {border-bottom:0}
+}
+@media (max-width:900px) {
+ .layout {display:block;min-height:0} .sidebar {padding:17px 17px 18px}
+ .db-nav {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+ .db-item {padding:8px;font-size:11px}
+ .page {padding:26px 20px 70px}
+}
+@media (max-width:600px) {
+ .topbar {padding:11px 14px}.brand-name {font-size:14px}.brand-desc {font-size:9px}.release {display:none}
+ .db-nav {grid-template-columns:repeat(2,minmax(0,1fr))}
+ .page {padding:21px 13px 70px}.intro {padding:22px 18px}.cards {grid-template-columns:1fr}
+ .info-grid {grid-template-columns:repeat(2,minmax(0,1fr))}.info strong {font-size:16px}
+ .table-list th,.table-list td {padding:10px 8px}.table-list {font-size:11px}
+ .titleline {flex-wrap:wrap} .picker {padding:25px 15px}
+}
+@media (prefers-reduced-motion:reduce) {html{scroll-behavior:auto}}
+
+/* 加密版：無外部字型/JS，相同介面只顯示於完成解密後 */
+.gate-outer { min-height:calc(100vh - 70px); padding:clamp(32px,8vh,100px) 18px 60px; display:flex; align-items:flex-start; justify-content:center; background:radial-gradient(ellipse at 80% 5%,#e4f6f3 0%,#f7f9fb 47%,#f7f9fb 100%); }
+.gate-card { width:min(100%,480px); border:1px solid #dce9eb; border-radius:18px; padding:40px 39px 27px; background:#fff; box-shadow:0 17px 55px #18364b14; }
+.gate-icon { width:46px;height:46px;display:grid;place-items:center;margin-bottom:22px;border-radius:13px;color:#0b9285;background:#e8f7f4;font-size:25px; }
+.gate-card h1 { margin:13px 0 12px;font-size:27px; }
+.gate-desc { margin:0 0 28px;color:#788d9d;font-size:13px; }
+.password-label { display:block;margin-bottom:8px;font-size:13px;font-weight:750;color:#304b5c; }
+#password { width:100%;height:46px;padding:0 14px;border:1px solid #cddbe2;border-radius:9px;background:#fbfdfd;outline:none;font-size:15px; }
+#password:focus { border-color:#0e9385;box-shadow:0 0 0 3px #32af9c18; }
+.gate-submit { width:100%;margin-top:18px;font-size:14px!important;padding:13px!important; }
+.login-message { min-height:22px;margin:10px 0 0;font-size:12px;color:#507d73;line-height:1.6; }
+.login-message.is-error { color:#b14242; }
+.gate-foot { border-top:1px solid #e9eef1;padding-top:16px;margin:13px 0 0;color:#93a2ac;font-size:11px;line-height:1.8; }
+@media(max-width:520px){.gate-card{padding:30px 23px 22px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <button class="brand" type="button" id="home-button" title="回首頁"><span class="brand-icon">◔</span><span><span class="brand-name">Orbis Database Viewer</span><span class="brand-desc">DATA STRUCTURE &amp; COLUMN STATISTICS</span></span></button>
+  <div class="top-right"><span class="release" id="release">資料受密碼保護</span><button class="btn dark" type="button" id="lock-button" hidden>鎖定資料</button></div>
+</header>
+<section class="gate-outer" id="gate" aria-label="資料存取驗證">
+  <div class="gate-card">
+    <div class="gate-icon" aria-hidden="true">◈</div>
+    <div class="eyebrow">ORBIS DATABASE VIEWER</div>
+    <h1>資料存取驗證</h1>
+    <p class="gate-desc">請輸入存取密碼，以瀏覽資料庫、資料表及欄位統計。</p>
+    <form id="unlock-form">
+      <label class="password-label" for="password">存取密碼</label>
+      <input id="password" name="password" type="password" required autocomplete="current-password" placeholder="輸入密碼" aria-describedby="login-message">
+      <button type="submit" id="unlock-button" class="btn primary gate-submit">解鎖並進入</button>
+      <p id="login-message" class="login-message" role="status" aria-live="polite"></p>
+    </form>
+    <p class="gate-foot">解密於瀏覽器內進行；本網站不會傳送輸入的密碼。<br>重新整理網頁後需要再次解鎖。</p>
+  </div>
+</section>
+<div class="layout" id="viewer-layout" hidden>
+  <aside class="sidebar" aria-label="資料庫清單">
+    <div class="sidebar-head"><div class="aside-kicker"><span>DATABASES</span><span id="db-count">—</span></div><input type="search" id="db-search" class="filter" placeholder="篩選 Database 名稱" aria-label="篩選 Database 名稱" autocomplete="off" disabled></div>
+    <nav class="db-nav" id="db-nav"><p class="side-note">正在讀取資料庫目錄…</p></nav>
+  </aside>
+  <main id="main" class="main"><div id="content" class="page"></div></main>
+</div>
+<script id="viewer-config" type="application/json">
+{"encryptedPath":"./data.enc.json"}
+</script>
+<script>
+(()=>{'use strict';
+ const $=(id)=>document.getElementById(id);
+ const CONFIG=JSON.parse($('viewer-config').textContent);
+ const STAT_NAMES=['DATA_TYPE','ROW_COUNT','VALID_COUNT','NULL_COUNT','MIN','MAX','AVG','STDDEV','VARIANCE'];
+ let catalog=null, dbIndex=-1, tableIndex=-1, pending=false;
+ const safe=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const format=(v)=>{let s=String(v??''); if(!s)return '<span class="dim">—</span>';return safe(/^-?\d+$/.test(s) ? s.replace(/\B(?=(\d{3})+(?!\d))/g,',') : s);};
+ const plainNum=(v)=>String(v??'').replace(/\B(?=(\d{3})+(?!\d))/g,',');
+ const cleanName=(s)=>String(s).replace(/\.csv$/i,'');
+ const displayVersion=(folder)=>{const m=folder.match(/(?:20)?(\d{2})[\-_]?([01]\d)(?!\d)/);return m?`20${m[1]}.${m[2]}`:folder;};
+ // RFC 4180 相容 CSV parser（支援有引號、換行與逗號的儲存格）。
+ function parseCSV(input){
+   const text=input.replace(/^\ufeff/,''); let q=false, field='',row=[],out=[];
+   for(let i=0;i<text.length;i++){
+     const c=text[i];
+     if(q){if(c==='"'){if(text[i+1]==='"'){field+='"';i++;}else q=false;} else field+=c;}
+     else if(c==='"' && field===''){q=true;}
+     else if(c===','){row.push(field);field='';}
+     else if(c==='\r' || c==='\n'){row.push(field);field='';if(row.some(x=>x!==''))out.push(row);row=[];if(c==='\r' && text[i+1]==='\n')i++;}
+     else field+=c;
+   }
+   if(q)throw Error('CSV 引號沒有正確結束');
+   if(field!=='' || row.length){row.push(field);out.push(row);}
+   return out;
+ }
+ function parseTable(text,filePath){
+   const rows=parseCSV(text);if(!rows.length || rows[0][0]?.replace(/^\ufeff/,'')!=='Statistic')throw Error('CSV 第一欄必須是 Statistic');
+   const header=rows[0].slice(1); if(!header.length)throw Error('CSV 無欄位');
+   const stats={};for(const r of rows.slice(1))if(r[0])stats[r[0].trim().toUpperCase()]=r.slice(1);
+   for(const k of STAT_NAMES)if(!stats[k] || stats[k].length!==header.length)throw Error(k+' 欄位數不正確');
+   const counts=new Set(stats.ROW_COUNT.filter(x=>x!==''));if(counts.size>1)throw Error('同一 Table 的 ROW_COUNT 不一致');
+   return { name:cleanName(filePath.split('/').pop()),source:filePath,rows:[...counts][0]||'—',cols:header.map((name,i)=>[name,...['DATA_TYPE','VALID_COUNT','NULL_COUNT','MIN','MAX','AVG','STDDEV','VARIANCE'].map(k=>stats[k][i])])};
+ }
+ // DataHub Word 轉出的 catalog.md 格式：## Database 名稱、介紹段落、**Assets:** N。
+ function parseMarkdown(text){
+   const entries=[],lines=text.replace(/^\ufeff/,'').split(/\r?\n/);let cur=null;
+   for(const line of lines){
+     const m=line.match(/^##\s+(.+?)\s*$/);
+     if(m){cur={name:m[1].trim(),desc:[],assets:null};entries.push(cur);continue;}
+     if(!cur)continue;
+     const a=line.match(/^\s*(?:[-*]\s*)?\*\*Assets:\*\*\s*(\d+)\s*$/i);
+     if(a){cur.assets=Number(a[1]);continue;}
+     const s=line.trim(); if(s && !/^---+\s*$/.test(s))cur.desc.push(s);
+   }
+   return entries.map(x=>({name:x.name,description:x.desc.join(' ').trim(),assets:x.assets}));
+ }
+
+ const AAD = new TextEncoder().encode('orbis-viewer|v1');
+ function decodeBase64(value){
+   const bin=atob(value);return Uint8Array.from(bin,x=>x.charCodeAt(0));
+ }
+ function setLoginMessage(message,isError=false){
+   const element=$('login-message');
+   element.textContent=message;
+   element.classList.toggle('is-error',isError);
+ }
+ async function unlockWithPassword(password){
+   if(pending)return;
+   pending=true;
+   $('unlock-button').disabled=true;
+   setLoginMessage('正在驗證並解密資料…');
+   try{
+     if(!window.crypto?.subtle)throw Error('瀏覽器不支援安全解密。請使用 HTTPS 網址或 localhost 開啟。');
+     const response=await fetch(CONFIG.encryptedPath,{cache:'no-store'});
+     if(!response.ok)throw Error('無法載入加密資料檔（HTTP '+response.status+'），請確認 data.enc.json 已上傳。');
+     const envelope=await response.json();
+     if(envelope.format!=='orbis-viewer-encrypted-v1' || envelope.kdf?.name!=='PBKDF2' || envelope.cipher?.name!=='AES-256-GCM')
+       throw Error('加密資料格式不相容。');
+     const salt=decodeBase64(envelope.kdf.salt);
+     const iv=decodeBase64(envelope.cipher.nonce);
+     const encrypted=decodeBase64(envelope.ciphertext);
+     const iterations=envelope.kdf.iterations;
+     if(salt.length!==16 || iv.length!==12 || encrypted.length<17 || !Number.isSafeInteger(iterations) || iterations<200000 || iterations>2000000)
+       throw Error('加密參數不正確。');
+     const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveKey']);
+     const key=await crypto.subtle.deriveKey(
+       {name:'PBKDF2',salt,iterations,hash:'SHA-256'},material,
+       {name:'AES-GCM',length:256},false,['decrypt']);
+     let decrypted;
+     try{
+       decrypted=await crypto.subtle.decrypt({name:'AES-GCM',iv,additionalData:AAD,tagLength:128},key,encrypted);
+     }catch(e){throw Error('密碼不正確，或加密資料檔案已損壞。');}
+     const data=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(decrypted));
+     if(data.schemaVersion!==1 || !Array.isArray(data.databases) || !Number.isInteger(data.tableCount))
+       throw Error('解密成功，但資料格式不正確。');
+     for(const d of data.databases){
+       if(typeof d.name!=='string' || !Array.isArray(d.tables))throw Error('資料庫目錄格式不正確。');
+       for(const t of d.tables){
+         if(typeof t.name!=='string' || !Array.isArray(t.cols))throw Error('資料表格式不正確。');
+       }
+     }
+     catalog={...data,errors:[],folder:'受密碼保護的統計資料',version:data.version||'最新資料'};
+     dbIndex=-1;tableIndex=-1;
+     $('password').value='';
+     $('gate').hidden=true;
+     $('viewer-layout').hidden=false;
+     $('lock-button').hidden=false;
+     $('release').textContent=catalog.version==='最新資料'?'Orbis 資料目錄':'資料版本 '+catalog.version;
+     $('db-search').disabled=false;
+     $('db-search').value='';
+     renderAll();
+     window.scrollTo(0,0);
+   }catch(e){
+     setLoginMessage(String(e.message||'無法解密資料'),true);
+   }finally{
+     pending=false;$('unlock-button').disabled=false;
+   }
+ }
+ function lockViewer(){
+   catalog=null;
+   dbIndex=-1;tableIndex=-1;
+   $('content').replaceChildren();
+   $('db-nav').replaceChildren();
+   $('db-search').value='';
+   $('db-search').disabled=true;
+   $('viewer-layout').hidden=true;
+   $('lock-button').hidden=true;
+   $('gate').hidden=false;
+   $('password').value='';
+   $('release').textContent='資料受密碼保護';
+   setLoginMessage('');
+   document.title='Orbis Database Viewer';
+   window.scrollTo(0,0);
+   $('password').focus();
+ }
+ function renderEmpty(message){
+   $('db-count').textContent='—';
+   $('db-nav').innerHTML='<p class="side-note">暫無可顯示的資料庫。</p>';
+   $('content').innerHTML=`<div class="intro"><span class="eyebrow">ORBIS DATA CATALOG</span><h1>資料庫與資料表總覽</h1><p>Orbis 資料庫介紹、資料表結構及欄位統計資訊。</p></div>
+     <div class="error">${safe(message||'無法載入資料。')}</div>
+     <div class="picker"><h2>無法讀取資料</h2><p>請通知網站管理者確認加密資料檔案是否正確。</p></div>`;
+ }
+ function navButtons(){const q=$('db-search').value.trim().toLowerCase();$('db-count').textContent=catalog.databases.length+' PRODUCTS';
+   const matches=catalog.databases.map((db,i)=>({db,i})).filter(({db})=>db.name.toLowerCase().includes(q));
+   $('db-nav').innerHTML=matches.length?matches.map(({db,i})=>`<button class="db-item ${dbIndex===i?'active':''}" type="button" data-db="${i}"><span>${safe(db.name)}</span><span class="count">${db.tables.length}</span></button>`).join(''):'<p class="side-note">無符合的 Database</p>';
+ }
+ function crumb(db=null,t=null){let arr=['<button class="crumb" type="button" data-home>全部資料庫</button>'];
+   if(db){arr.push('<span>/</span>');arr.push(t?`<button type="button" class="crumb" data-db="${dbIndex}">${safe(db.name)}</button>`:`<span class="crumb current">${safe(db.name)}</span>`)}
+   if(t){arr.push('<span>/</span>');arr.push(`<span class="crumb current">${safe(t.name)}</span>`)}
+   return `<nav class="breadcrumb" aria-label="導覽路徑">${arr.join('')}</nav>`;}
+ function metric(title,value){return `<div class="metric"><small>${safe(title)}</small><strong>${format(value)}</strong></div>`}
+ function info(title,value){return `<div class="info"><small>${safe(title)}</small><strong>${format(value)}</strong></div>`}
+ function renderHome(){const dbs=catalog.databases;
+  $('content').innerHTML=`<div class="intro"><span class="eyebrow">ORBIS DATA CATALOG</span><h1>資料庫與資料表總覽</h1><p>Orbis 資料庫介紹、資料表結構及欄位統計資訊。</p></div>
+  <div class="metrics">${metric('資料庫 Database',dbs.length)}${metric('資料表 Table',catalog.tableCount)}</div>
+  ${catalog.errors.length?`<div class="status warn">已讀取資料，但有 ${catalog.errors.length} 項提醒：<details><summary>查看詳細資訊</summary>${catalog.errors.slice(0,30).map(x=>`<p>${safe(x)}</p>`).join('')}</details></div>`:''}
+  <div class="sectionhead"><h2>資料庫清單 / Databases</h2><small>資料版本：${safe(catalog.version)}</small></div>
+  <div class="cards">${dbs.map((db,i)=>`<button class="db-card" type="button" data-db="${i}"><span class="card-title">${safe(db.name)}</span><span class="card-desc">${safe(db.description||'')}</span><span class="card-foot"><span>${db.tables.length} Tables${db.assets!=null?' · '+db.assets+' Assets':''}</span><strong>查看 Tables →</strong></span></button>`).join('')}</div>
+  <p class="smallnote">本頁內容由加密的資料目錄載入。</p>`;
+ }
+ function renderDatabase(){const db=catalog.databases[dbIndex];const rows=db.tables.map((t,i)=>`<tr><td><button type="button" class="link" data-table="${i}">${safe(t.name)} ↗</button></td><td class="right">${format(t.rows)}</td><td class="right">${format(t.columnCount)}</td></tr>`).join('');
+  $('content').innerHTML=`${crumb(db)}<div class="eyebrow">DATABASE OVERVIEW</div><div class="titleline"><h1>${safe(db.name)}</h1><span class="version">${safe(catalog.version)}</span></div>
+  ${db.description?`<div class="descbox">${safe(db.description)}</div>`:''}
+  <div class="info-grid">${info('Table 數量（CSV）',db.tables.length)}${info('DataHub Assets（文件）',db.assets==null?'—':db.assets)}${info('更新類型（名稱）',db.name.match(/\(([^()]+)\)$/)?.[1]||'—')}</div>
+  <div class="panel"><div class="panel-head"><h2>資料表清單 · Tables</h2><small>點選 Table 查看全部欄位</small></div>
+  ${rows?`<table class="table-list"><thead><tr><th>Table Name</th><th class="right">Rows</th><th class="right">Columns</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">此資料庫目前沒有對應的統計 CSV。</div>'}</div>`;
+ }
+ function typeBadge(v){const s=String(v||'').toLowerCase();return s.includes('date')||s.includes('time')?'time':/int|float|double|decimal|numeric|real/.test(s)?'numeric':'';}
+ function renderTable(){const db=catalog.databases[dbIndex],t=db.tables[tableIndex];
+   const rows=t.cols.map(c=>`<tr><td class="name" data-label="COLUMN NAME" title="${safe(c[0])}">${safe(c[0]).replace(/_/g,'_<wbr>')}</td><td class="type" data-label="DATA_TYPE"><span class="type-pill ${typeBadge(c[1])}">${safe(c[1])}</span></td>${['VALID_COUNT','NULL_COUNT','MIN','MAX','AVG','STDDEV','VARIANCE'].map((label,i)=>`<td data-label="${label}">${format(c[i+2])}</td>`).join('')}</tr>`).join('');
+   $('content').innerHTML=`${crumb(db,t)}<div class="eyebrow">TABLE DETAILS / COLUMN STATISTICS</div>
+      <div class="titleline"><h1>${safe(t.name)}</h1><span class="version">${safe(catalog.version)}</span></div>
+      <p style="color:#7c90a0;font-size:12px;margin:0 0 17px">所屬資料庫：${safe(db.name)}</p>
+      <div class="info-grid">${info('ROW_COUNT / 資料列數',t.rows)}${info('COLUMN_COUNT / 欄位數',t.cols.length)}${info('統計資料來源','CSV')}</div>
+      <div class="table-actions"><div><h2>Column Statistics</h2><p>欄位名稱、型態及所有統計數值</p></div><button class="btn" data-db="${dbIndex}" type="button">← 返回 Tables</button></div>
+      <div class="stats-wrap"><table class="stats-table"><thead><tr><th class="name">COLUMN NAME</th><th class="type">DATA_TYPE</th><th>VALID_COUNT</th><th>NULL_COUNT</th><th>MIN</th><th>MAX</th><th>AVG</th><th>STDDEV</th><th>VARIANCE</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="smallnote">ROW_COUNT 已列於上方；「—」表示 CSV 原始統計值為空白。所有統計數字保留原值。</p>`;
+ }
+ function renderAll(){
+   if(!catalog){renderEmpty('資料尚未載入');return;}
+   navButtons();
+   if(dbIndex<0)renderHome();
+   else if(tableIndex<0)renderDatabase();
+   else renderTable();
+   document.title=(dbIndex<0?'':catalog.databases[dbIndex].name+' · ')+'Orbis Database Viewer';
+ }
+ function navigate(db=-1,t=-1){dbIndex=db;tableIndex=t;renderAll();window.scrollTo({top:0,behavior:'instant'});}
+ document.body.addEventListener('click',e=>{
+   const b=e.target.closest('button');if(!b)return;
+   if(b.id==='lock-button')lockViewer();
+   else if(b.id==='home-button'||b.hasAttribute('data-home'))navigate();
+   else if(b.hasAttribute('data-db'))navigate(Number(b.dataset.db));
+   else if(b.hasAttribute('data-table'))navigate(dbIndex,Number(b.dataset.table));
+ });
+ $('db-search').addEventListener('input',()=>{if(catalog)navButtons();});
+ $('unlock-form').addEventListener('submit',event=>{
+   event.preventDefault();
+   const pass=$('password').value;
+   if(pass)unlockWithPassword(pass);
+ });
+})();
+</script>
+</body>
+</html>
