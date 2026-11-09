@@ -136,10 +136,23 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
   .pagination-actions { width: 100%; justify-content: space-between; gap: 7px; }
   .pagination-actions button { min-width: 0; flex: 1 1 0; padding: 8px 6px; font-size: 13px; }
 }
+
+/* v8：公式匯入、匯出以及可編輯 JSON；預設收合，不擠壓篩選區。 */
+.rules-transfer { border-top: 1px solid var(--line); margin-top: 15px; padding-top: 14px; }
+.rules-transfer > summary { cursor: pointer; font-size: 15px; font-weight: 700; color: #255883; padding: 4px 0; }
+.rules-transfer[open] > summary { margin-bottom: 10px; }
+.rules-transfer .buttons { margin: 10px 0 12px; }
+.rules-transfer .transfer-file { max-width: 500px; }
+.rules-editor { margin-top: 12px; padding: 12px; border: 1px solid #d9e4f1; border-radius: 9px; background: #f8fafc; }
+.rules-editor textarea { display: block; width: 100%; min-height: 240px; resize: vertical; font-family: ui-monospace, Consolas, monospace; font-size: 13px; line-height: 1.65; border-radius: 7px; border: 1px solid #cbd6e3; padding: 12px; background: #fff; color: #1b2b40; white-space: pre; overflow: auto; }
+.rules-editor textarea:focus-visible { outline: 2px solid #75aeef; outline-offset: 2px; }
+.rules-transfer .transfer-message { font-size: 13px; margin-top: 12px; white-space: pre-wrap; }
+.rules-transfer .transfer-message.success { background: #effcf6; border-color: #c9eedf; color: #116a46; }
+.rules-transfer .transfer-message.error { background: #fff3f2; border-color: #ffcfcc; color: var(--red); }
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>🗂️ 大型 Parquet 資料瀏覽器</h1></div></header>
+<header><div class="header-inner"><h1>🗂️ 大型 Parquet 資料瀏覽器 <span class="badge">v8</span></h1></div></header>
 <div class="layout">
   <aside>
     <div class="panel">
@@ -169,6 +182,30 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
       <div class="buttons"><button id="addFilter">＋ 新增條件</button><button id="addGroup">＋ 新增括號群組</button><button id="applyFilters" class="primary">✅ 套用篩選</button><button id="resetFilters">清除已套用的條件</button></div>
       <div id="filterInfo" class="hint mt">尚未套用條件</div>
       <div id="sqlPreview" class="sql-preview" aria-live="polite">查詢邏輯預覽：尚無條件</div>
+      <details class="rules-transfer" id="rulesTransfer">
+        <summary>💾 儲存／匯入篩選公式（JSON）</summary>
+        <p class="hint">儲存目前畫面上的<strong>條件、括號層級、AND／OR 與比較值</strong>。JSON 可以用記事本或 VS Code 編輯後匯入；不含 Parquet 資料本身。匯入後請按「套用篩選」，不會自動查詢。</p>
+        <div class="buttons">
+          <button id="exportRules" type="button">⬇️ 匯出公式 JSON</button>
+          <button id="exportSQL" type="button">⬇️ 匯出 SQL（參考用）</button>
+          <button id="openRulesEditor" type="button">✏️ 顯示／編輯 JSON</button>
+        </div>
+        <div class="formgroup transfer-file">
+          <label for="importRulesFile">從電腦匯入 JSON 公式檔</label>
+          <input id="importRulesFile" type="file" accept=".json,application/json">
+        </div>
+        <div id="rulesEditor" class="rules-editor hide">
+          <label for="rulesText">可在這裡直接修改 JSON，再載入到畫面</label>
+          <textarea id="rulesText" spellcheck="false" aria-label="可編輯的 JSON 篩選公式"></textarea>
+          <div class="buttons">
+            <button id="importRulesText" type="button" class="primary">↩ 將 JSON 載入篩選畫面</button>
+            <button id="reloadRulesText" type="button">從目前畫面重新產生 JSON</button>
+            <button id="closeRulesEditor" type="button">收合編輯區</button>
+          </div>
+          <p class="hint">編輯欄位名稱 <code>field</code>、比較方式 <code>operator</code>、數值 <code>values</code>，以及群組的 <code>join</code>／<code>children</code>。匯入時會檢查目前資料表欄位、型態、層數與條件數。<strong>JSON 匯入不會執行任意 SQL。</strong></p>
+        </div>
+        <div id="rulesMessage" class="alert transfer-message hide" role="status" aria-live="polite"></div>
+      </details>
     </div>
     <div class="panel">
       <h2>📋 資料預覽</h2>
@@ -219,7 +256,7 @@ function showError(error) { $('errorBox').textContent=(error && error.message) |
 function clearError() { $('errorBox').textContent='';$('errorBox').classList.add('hide'); }
 function controls() { for (const btn of document.querySelectorAll('button')) btn.disabled=busy;
  $('loadLocal').disabled=busy||!conn;$('loadRemote').disabled=busy||!conn;$('loadURL').disabled=busy||!conn;
- if (!busy) { $('prevPage').disabled=!currentPath||currentPage<=1; $('nextPage').disabled=!currentPath||rows.length<Number($('pageSize').value); $('downloadPage').disabled=!currentPath||!rows.length; $('countRows').disabled=!currentPath; $('applyFilters').disabled=!currentPath; $('addFilter').disabled=!currentPath; $('addGroup').disabled=!currentPath; $('downloadCSV').disabled=!currentPath||(!activeCount&&!$('confirmAll').checked); $('downloadParquet').disabled=$('downloadCSV').disabled; }
+ if (!busy) { $('prevPage').disabled=!currentPath||currentPage<=1; $('nextPage').disabled=!currentPath||rows.length<Number($('pageSize').value); $('downloadPage').disabled=!currentPath||!rows.length; $('countRows').disabled=!currentPath; $('applyFilters').disabled=!currentPath; $('addFilter').disabled=!currentPath; $('addGroup').disabled=!currentPath; $('downloadCSV').disabled=!currentPath||(!activeCount&&!$('confirmAll').checked); $('downloadParquet').disabled=$('downloadCSV').disabled; for(const id of ['exportRules','exportSQL','openRulesEditor','importRulesText','reloadRulesText']) $(id).disabled=!currentPath; $('importRulesFile').disabled=!currentPath; }
 }
 async function execute(label, job) { if(busy)return;busy=true;controls();clearError();status(label,true);try{await job();status('完成：'+label);}catch(e){status('執行失敗');showError(e);}finally{busy=false;controls();} }
 function make(tag, props={}, text=null) { const el=document.createElement(tag);for(const [k,v] of Object.entries(props)){if(k==='class')el.className=v;else el[k]=v;}if(text!==null)el.textContent=text;return el; }
@@ -248,6 +285,11 @@ function moveSibling(node,delta) {const area=node.parentElement, nodes=directNod
  refreshTree();}
 function moveToArea(node,area,before=null) {if(!validMove(node,area))throw new Error('不能將群組拖進自身，或超過 '+MAX_DEPTH+' 層括號。');
  if(before===node)return;area.insertBefore(node,before);refreshTree();}
+function operatorsFor(kind) {
+ return kind==='number'?['等於','大於','大於等於','小於','小於等於','數值區間','為空值','非空值']:
+  kind==='date'?['日期區間','等於某日','早於','晚於','為空值','非空值']:
+  ['包含','不包含','等於','開頭為','結尾為','日期區間（文字日期）','為空值','非空值'];
+}
 function createGroup() {
  if(allGroups().length>=MAX_GROUPS)throw new Error('最多 '+MAX_GROUPS+' 個群組。');
  const group=make('section',{class:'logic-node group-node'});group.dataset.nodeId='g_'+(++groupID);
@@ -267,7 +309,7 @@ function createGroup() {
 function buildGroup(area=$('filters')) {if(getAreaDepth(area)>=MAX_DEPTH)throw new Error('最多 '+MAX_DEPTH+' 層括號。');const g=createGroup();area.append(g);refreshTree();return g;}
 function buildFilterRow(area=$('filters')) {
  if(!schema.length)throw new Error('請先載入 Parquet 檔案。');
- if(document.querySelectorAll('#filters .filter-node').length>=MAX_FILTERS)throw new Error('最多 '+MAX_FILTERS+' 個篩選條件。');
+ if(area.isConnected && document.querySelectorAll('#filters .filter-node').length>=MAX_FILTERS)throw new Error('最多 '+MAX_FILTERS+' 個篩選條件。');
  const block=make('div',{class:'logic-node filter-node'});block.dataset.nodeId='f_'+(++filterID);
  const top=make('div',{class:'node-top'}),grip=makeGrip(),rm=make('button',{type:'button',class:'remove'},'移除條件'),actions=make('div',{class:'node-actions'});
  actions.append(makeMoveMenu(block),rm);top.append(grip,actions);
@@ -278,9 +320,9 @@ function buildFilterRow(area=$('filters')) {
  const nest=make('div',{class:'drop-nest drop-target'},'↳ 拖到此處：與上面這條件自動建立新括號');nest.dataset.action='pair';
  rm.addEventListener('click',()=>{block.remove();refreshTree();});
  row.append(fieldWrap,opWrap,valWrap);block.append(top,row,nest);area.append(block);
- function options(){const col=schema.find(c=>c.name===field.value);if(!col){op.replaceChildren(new Option('請先選欄位',''));valueArea.replaceChildren();return;}const kind=kindOf(col.type);let vals=kind==='number'?['等於','大於','大於等於','小於','小於等於','數值區間','為空值','非空值']:kind==='date'?['日期區間','等於某日','早於','晚於','為空值','非空值']:['包含','不包含','等於','開頭為','結尾為','日期區間（文字日期）','為空值','非空值'];op.replaceChildren(...vals.map(o=>new Option(o,o)));valueInput();}
+ function options(){const col=schema.find(c=>c.name===field.value);if(!col){op.replaceChildren(new Option('請先選欄位',''));valueArea.replaceChildren();return;}const kind=kindOf(col.type);let vals=operatorsFor(kind);op.replaceChildren(...vals.map(o=>new Option(o,o)));valueInput();}
  function valueInput(){valueArea.replaceChildren();const col=schema.find(c=>c.name===field.value);if(!col || ['為空值','非空值'].includes(op.value))return;let kind=kindOf(col.type),isRange=['數值區間','日期區間','日期區間（文字日期）'].includes(op.value),isDate=kind==='date'||op.value==='日期區間（文字日期）';for(let i=0;i<(isRange?2:1);i++){const input=make('input',{type:isDate?'date':kind==='number'?'number':'text'});if(kind==='number'){input.step='any';input.placeholder=isRange?(i?'上限（含）':'下限（含）'):'比較數值';}else if(isDate){input.value=isRange?(i?'2099-12-31':'2000-01-01'):new Date().toISOString().slice(0,10);}else input.placeholder='輸入關鍵字／文字';valueArea.append(input);} }
- field.addEventListener('change',options);op.addEventListener('change',valueInput);options();refreshTree();return block;
+ field.addEventListener('change',options);op.addEventListener('change',valueInput);options();if(area.isConnected)refreshTree();return block;
 }
 function refreshSlots() {
  for(const area of document.querySelectorAll('#filters.group-children, #filters .group-children')) {
@@ -369,7 +411,7 @@ function showApplied(){const n=activeCount;$('filterInfo').textContent=n?`目前
 function whereSQL(){return activeSQL?' WHERE '+activeSQL:'';}
 
 async function setSource(label,source){const old=currentPath;const virtual='source_'+(++sourceCounter)+'.parquet';if(source.type==='file')await db.registerFileHandle(virtual,source.file,duckdb.DuckDBDataProtocol.BROWSER_FILEREADER,true);else await db.registerFileURL(virtual,source.url,duckdb.DuckDBDataProtocol.HTTP,false);
- try{await conn.query(`CREATE OR REPLACE VIEW source_data AS SELECT * FROM read_parquet(${strQuote(virtual)})`);const table=await conn.query('DESCRIBE source_data');schema=table.toArray().map(row=>{const j=row.toJSON();return {name:j.column_name,type:j.column_type};});currentPath=virtual;fileDisplayName=label;renderSchema();$('filters').replaceChildren();$('rootJoin').value='AND';refreshTree();resetActive();$('fileInfo').textContent='目前資料：'+label+'｜欄位數：'+schema.length;await preview();if(old&&old!==virtual){try{await db.dropFile(old);}catch(e){console.warn('卸載前一檔案失敗',e);}}}catch(e){try{await db.dropFile(virtual)}catch{}throw e;}}
+ try{await conn.query(`CREATE OR REPLACE VIEW source_data AS SELECT * FROM read_parquet(${strQuote(virtual)})`);const table=await conn.query('DESCRIBE source_data');schema=table.toArray().map(row=>{const j=row.toJSON();return {name:j.column_name,type:j.column_type};});currentPath=virtual;fileDisplayName=label;renderSchema();$('filters').replaceChildren();$('rootJoin').value='AND';refreshTree();resetActive();clearRulesMessage();$('rulesEditor').classList.add('hide');$('rulesText').value='';$('fileInfo').textContent='目前資料：'+label+'｜欄位數：'+schema.length;await preview();if(old&&old!==virtual){try{await db.dropFile(old);}catch(e){console.warn('卸載前一檔案失敗',e);}}}catch(e){try{await db.dropFile(virtual)}catch{}throw e;}}
 function valueToDisplay(v){if(v===null||v===undefined)return '';if(v instanceof Date)return v.toISOString();if(typeof v==='object'){return JSON.stringify(v,(_k,x)=>typeof x==='bigint'?String(x):x);}return String(v);}
 function getCols(table){return table.schema.fields.map(f=>f.name);}
 async function preview(){if(!currentPath)return;const n=Math.max(1,Number($('pageNumber').value)||1);const size=Number($('pageSize').value);currentPage=n;$('pageNumber').value=n;const res=await conn.query(`SELECT * FROM source_data${whereSQL()} LIMIT ${size} OFFSET ${(n-1)*size}`);const cols=getCols(res);rows=res.toArray().map(r=>r.toJSON());const head=$('previewHead'),body=$('previewBody');head.replaceChildren();body.replaceChildren();const header=make('tr');for(const col of cols)header.append(make('th',{},col));head.append(header);if(!rows.length){const tr=make('tr');const td=make('td',{},'沒有符合條件的資料，或已超出最後一頁。');td.colSpan=cols.length||1;tr.append(td);body.append(tr);}else for(const r of rows){const tr=make('tr');for(const col of cols){const td=make('td',{},valueToDisplay(r[col]));td.title=valueToDisplay(r[col]);tr.append(td);}body.append(tr);} $('tableStatus').textContent=`第 ${n} 頁｜本頁 ${rows.length} 筆｜僅查詢本頁資料`;$('prevPage').disabled=n<=1;$('nextPage').disabled=rows.length<size;}
@@ -400,6 +442,166 @@ $('downloadPage').addEventListener('click',()=>{try{downloadCurrentPage();}catch
 $('downloadCSV').addEventListener('click',()=>execute('匯出完整 CSV（大量資料可能耗盡記憶體）',()=>exportFull('csv')));
 $('downloadParquet').addEventListener('click',()=>execute('匯出完整 Parquet（大量資料可能耗盡記憶體）',()=>exportFull('parquet')));
 $('confirmAll').addEventListener('change',controls);
+
+// --- v8: 可攜式、可手動編輯的 JSON 篩選公式 (非 SQL 執行器) ---
+const RULES_FORMAT = 'parquet-filter-tree';
+const RULES_VERSION = 1;
+const MAX_RULES_BYTES = 1024 * 1024;
+const MAX_VALUE_LENGTH = 10000;
+function rulesMessage(message, isError=false) {
+ const el=$('rulesMessage'); el.textContent=message;el.classList.remove('hide','success','error');el.classList.add(isError?'error':'success');
+}
+function clearRulesMessage(){const el=$('rulesMessage');el.textContent='';el.classList.add('hide');}
+function ruleFields(node) {
+ const field=node.querySelector(':scope > .filter-row .filter-field');
+ if(!field.value)return {type:'condition',field:'',operator:'',values:[]};
+ return {type:'condition',field:field.value,operator:node.querySelector(':scope > .filter-row .filter-operator').value,
+  values:[...node.querySelectorAll(':scope > .filter-row .valbox input')].map(e=>e.value)};
+}
+function rulesChildren(area) {
+ return directNodes(area).map(node=>{
+  if(node.classList.contains('filter-node'))return ruleFields(node);
+  const name=node.querySelector(':scope > .group-header .group-name').value;
+  const join=node.querySelector(':scope > .group-header .group-op').value;
+  return {type:'group',name,join,children:rulesChildren(node.querySelector(':scope > .group-children'))};
+ });
+}
+function serializeRules() {
+ if(!currentPath)throw new Error('請先載入 Parquet，再儲存篩選公式。');
+ const columns=[...new Set([...document.querySelectorAll('#filters .filter-field')].map(s=>s.value).filter(Boolean))]
+  .map(name=>{const col=schema.find(c=>c.name===name);return {name,kind:kindOf(col.type)};});
+ return {format:RULES_FORMAT,version:RULES_VERSION,
+   source:{file:fileDisplayName,columns},
+   query:{join:$('rootJoin').value,children:rulesChildren($('filters'))}};
+}
+function rulesJSONString(){return JSON.stringify(serializeRules(),null,2)+'\n';}
+function isObject(v){return v!==null&&typeof v==='object'&&!Array.isArray(v);}
+function checkJoin(join,path){if(join!=='AND'&&join!=='OR')throw new Error(path+' 的 join 只能是 AND 或 OR。');}
+function isValidISODate(s){if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
+ const [y,m,d]=s.split('-').map(Number); const date=new Date(Date.UTC(y,m-1,d));return y>=100&&date.getUTCFullYear()===y&&date.getUTCMonth()+1===m&&date.getUTCDate()===d;}
+function validateRules(obj) {
+ if(!isObject(obj)||obj.format!==RULES_FORMAT||obj.version!==RULES_VERSION)
+   throw new Error('格式不符。請使用本系統匯出的 JSON：format="'+RULES_FORMAT+'"、version='+RULES_VERSION+'。');
+ if(!isObject(obj.query))throw new Error('JSON 缺少 query 物件。');
+ if(!schema.length||!currentPath)throw new Error('請先讀取要套用的 Parquet 檔案，再匯入公式。');
+ checkJoin(obj.query.join,'最外層 query');
+ let filters=0,groups=0;
+ const lookup=new Map(schema.map(col=>[col.name,col]));
+ function walk(children,depth,path){
+  if(!Array.isArray(children))throw new Error(path+' 的 children 必須是陣列。');
+  if(children.length>MAX_FILTERS+MAX_GROUPS)throw new Error(path+' 節點數超過上限。');
+  return children.map((item,index)=>{
+   const here=path+' > 第 '+(index+1)+' 項';
+   if(!isObject(item))throw new Error(here+' 必須是物件。');
+   if(item.type==='group'){
+    if(depth>=MAX_DEPTH)throw new Error(here+' 超過 '+MAX_DEPTH+' 層括號。');
+    if(++groups>MAX_GROUPS)throw new Error('群組超過 '+MAX_GROUPS+' 個。');
+    if(typeof item.name!=='string'||item.name.length>150)throw new Error(here+' 的 name 必須是 150 字以內的文字。');
+    checkJoin(item.join,here);
+    return {type:'group',name:item.name,join:item.join,children:walk(item.children,depth+1,here)};
+   }
+   if(item.type!=='condition')throw new Error(here+' 的 type 只能是 condition 或 group。');
+   if(++filters>MAX_FILTERS)throw new Error('條件超過 '+MAX_FILTERS+' 條。');
+   if(typeof item.field!=='string'||typeof item.operator!=='string'||!Array.isArray(item.values)||item.values.some(v=>typeof v!=='string'||v.length>MAX_VALUE_LENGTH))
+     throw new Error(here+' 的 field／operator 必須是文字，values 必須是文字陣列（單值長度上限 '+MAX_VALUE_LENGTH+'）。');
+   if(!item.field){
+     if(item.operator!==''||item.values.length)throw new Error(here+' 的空白欄位必須使用 operator=""、values=[]。');
+     return {type:'condition',field:'',operator:'',values:[]};
+   }
+   const col=lookup.get(item.field);
+   if(!col)throw new Error(here+' 找不到欄位「'+item.field+'」。請先開啟含有相同欄位的 Parquet，或修改 JSON 欄位名稱。');
+   const kind=kindOf(col.type);
+   if(!operatorsFor(kind).includes(item.operator))throw new Error(here+' 的比較方式「'+item.operator+'」不適用「'+item.field+'」（'+col.type+'）。');
+   const expected=['為空值','非空值'].includes(item.operator)?0:['數值區間','日期區間','日期區間（文字日期）'].includes(item.operator)?2:1;
+   if(item.values.length!==expected)throw new Error(here+' 的 values 應填 '+expected+' 個值。');
+   if(kind==='number'&&item.values.some(v=>v.trim()!==''&&!Number.isFinite(Number(v))))throw new Error(here+' 的比較數值格式不正確。');
+   if((kind==='date'||item.operator==='日期區間（文字日期）')&&item.values.some(v=>v!==''&&!isValidISODate(v)))
+      throw new Error(here+' 的日期請使用 YYYY-MM-DD，例如 2025-12-31。');
+   return {type:'condition',field:item.field,operator:item.operator,values:[...item.values]};
+  });
+ }
+ const tree={join:obj.query.join,children:walk(obj.query.children,0,'query')};
+ // type mismatch check even if a field exists in target schema
+ if(obj.source?.columns!==undefined){
+  if(!Array.isArray(obj.source.columns))throw new Error('source.columns 必須是陣列。');
+  for(const item of obj.source.columns){
+   if(!isObject(item)||typeof item.name!=='string'||!['text','date','number'].includes(item.kind))throw new Error('source.columns 格式錯誤。');
+   const target=lookup.get(item.name);
+   if(target&&kindOf(target.type)!==item.kind)throw new Error('欄位「'+item.name+'」的型態不相容：來源 '+item.kind+'，目前 '+kindOf(target.type)+'。');
+  }
+ }
+ return tree;
+}
+function populateRulesArea(area,nodes){
+ for(const item of nodes){
+  if(item.type==='group'){
+   const group=createGroup();
+   group.querySelector(':scope > .group-header .group-name').value=item.name;
+   group.querySelector(':scope > .group-header .group-op').value=item.join;
+   area.append(group);populateRulesArea(group.querySelector(':scope > .group-children'),item.children);
+  }else{
+   const block=buildFilterRow(area);
+   const field=block.querySelector(':scope > .filter-row .filter-field');
+   if(!item.field)continue;
+   field.value=item.field;field.dispatchEvent(new Event('change'));
+   const op=block.querySelector(':scope > .filter-row .filter-operator');
+   op.value=item.operator;op.dispatchEvent(new Event('change'));
+   const inputs=[...block.querySelectorAll(':scope > .filter-row .valbox input')];
+   for(let i=0;i<inputs.length;i++)inputs[i].value=item.values[i];
+  }
+ }
+}
+function importRulesObject(obj){
+ const tree=validateRules(obj);
+ // 在離線 DOM 完成重建；直到完成才替換現有公式，避免錯誤 JSON 清空原設定。
+ const staging=make('div',{class:'group-children'});
+ populateRulesArea(staging,tree.children);
+ $('filters').replaceChildren(...staging.childNodes);
+ $('rootJoin').value=tree.join;
+ refreshTree();
+ const name=typeof obj.source?.file==='string'?obj.source.file:'';
+ const warning=name&&name!==fileDisplayName?'（注意：原設定來自「'+name+'」，目前資料為「'+fileDisplayName+'」，請確認篩選值適用。）':'';
+ rulesMessage('✅ 已還原 '+document.querySelectorAll('#filters .filter-node').length+' 條件、'+allGroups().length+' 個括號群組。'+warning+'\n請檢查 SQL 預覽並按「✅ 套用篩選」；匯入不會立即影響目前的查詢結果。');
+}
+function importRulesText(text){
+ if(new Blob([text]).size>MAX_RULES_BYTES)throw new Error('JSON 超過 1 MB，請精簡檔案。');
+ let parsed;try{parsed=JSON.parse(text.replace(/^\uFEFF/,''));}catch(e){throw new Error('JSON 語法錯誤：'+e.message);}
+ importRulesObject(parsed);
+}
+function handleRulesError(e){rulesMessage('❌ 匯入／匯出失敗：'+(e?.message||String(e)),true);showError(e);}
+$('exportRules').addEventListener('click',()=>{try{clearRulesMessage();saveBlob(new Blob([rulesJSONString()],{type:'application/json;charset=utf-8'}),makeName('query_rules_v1.json'));rulesMessage('✅ 已匯出目前畫面上的 JSON 篩選公式；可用文字編輯器修改，再匯入。');}catch(e){handleRulesError(e);}});
+$('exportSQL').addEventListener('click',()=>{try{
+ clearRulesMessage();if(!currentPath)throw new Error('請先開啟 Parquet。');
+ const {sql,count}=compileTree();if(!count)throw new Error('沒有有效條件可匯出 SQL。');
+ const output='-- Parquet 資料瀏覽器 v8；參考用 SQL，不能直接匯入本網頁\n'
+   +'-- 可自行替換下方 read_parquet() 路徑，再於 DuckDB 執行。\n'
+   +'SELECT *\nFROM read_parquet('+strQuote(fileDisplayName)+')\nWHERE '+sql+';\n';
+ saveBlob(new Blob(['\ufeff',output],{type:'text/plain;charset=utf-8'}),makeName('query.sql'));
+ rulesMessage('✅ 已下載 SQL 文字檔。需要匯回本網頁、繼續拖曳修改時，請使用 JSON 公式。');
+ }catch(e){handleRulesError(e);}});
+$('openRulesEditor').addEventListener('click',()=>{try{
+ if($('rulesEditor').classList.contains('hide')){
+  $('rulesText').value=rulesJSONString();$('rulesEditor').classList.remove('hide');
+ }else $('rulesEditor').classList.add('hide');
+ }catch(e){handleRulesError(e);}});
+$('reloadRulesText').addEventListener('click',()=>{try{
+ if($('rulesText').value.trim()&&$('rulesText').value!==rulesJSONString()&&!confirm('重新產生 JSON 會覆蓋編輯框中的修改，確定嗎？'))return;
+ $('rulesText').value=rulesJSONString();rulesMessage('已從目前畫面重新產生 JSON。');
+ }catch(e){handleRulesError(e);}});
+$('closeRulesEditor').addEventListener('click',()=>$('rulesEditor').classList.add('hide'));
+$('importRulesText').addEventListener('click',()=>{try{
+ clearRulesMessage();importRulesText($('rulesText').value);
+ }catch(e){handleRulesError(e);}});
+$('importRulesFile').addEventListener('change',async()=>{
+ const f=$('importRulesFile').files?.[0];if(!f)return;
+ try{
+  if(busy)throw new Error('系統正在查詢，請完成後再匯入。');
+  if(!currentPath)throw new Error('請先開啟 Parquet。');
+  if(f.size>MAX_RULES_BYTES)throw new Error('JSON 檔超過 1 MB。');
+  clearRulesMessage();importRulesText(await f.text());
+ }catch(e){handleRulesError(e);}finally{$('importRulesFile').value='';}
+});
+
 refreshTree();
 // 診斷功能：無論程式庫成功與否，都可顯示明確錯誤資訊，不再停留在「系統準備中」。
 window.addEventListener('unhandledrejection', ev => { if(!conn) { status('DuckDB-Wasm 載入異常'); showError(ev.reason || '未知 Promise 錯誤'); } });
