@@ -55,17 +55,48 @@ th { background: #f5f7fa; position: sticky; top: 0; z-index: 1; color: #3b516c; 
 td { max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
 tbody tr:nth-child(even) { background: #fafbfc; }
 .tablewrap { width: 100%; max-height: 520px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
-/* 每兩筆條件之間都有獨立 AND / OR 選單，不影響篩選卡片和分頁的排版。 */
-.filter-block { min-width: 0; }
-.filter-link { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin: 0 0 10px 15px; font-size: 13px; color: #476383; }
-.filter-link select { width: 198px; height: 38px; padding: 6px 10px; font-weight: 650; border-color: #b9d3f1; background: #eff6ff; color: #174d8b; }
-.filter-link label { margin: 0; }
-.filter-block:first-child .filter-link { display: none; }
-.filter-row { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr) minmax(0, 1.45fr) auto; gap: 11px; align-items: end; background: #fafbfd; border: 1px solid var(--line); border-radius: 9px; padding: 13px; margin-bottom: 11px; }
+/* 可拖曳的括號樹：每個群組自身就是一對 SQL 括號。 */
+.logic-root { margin: 14px 0 15px; border: 1px solid #d8e4f3; border-radius: 10px; padding: 13px; background: #fafcff; }
+.logic-root-head { display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; margin-bottom: 7px; }
+.logic-root-head label { margin: 0; }
+.logic-root-head select { max-width: 215px; background: #fff; }
+.logic-node { min-width: 0; position: relative; }
+.logic-node.filter-node { border: 1px solid #dbe3ee; border-radius: 9px; background: #fff; margin: 5px 0; padding: 7px 9px; }
+.logic-node .node-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 7px; margin-bottom: 3px; }
+.drag-handle { cursor: grab; color: #345a8b; background: #ecf3fc; border: 1px solid #cbdcee; border-radius: 7px; padding: 5px 9px; font-weight: 700; font-size: 12px; user-select: none; display: inline-block; }
+.drag-handle:focus-visible { outline: 2px solid #1674db; }
+.drag-handle:active { cursor: grabbing; }
+.node-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.node-actions button { min-height: 31px; font-size: 12px; padding: 4px 8px; }
+.node-actions details { font-size: 12px; position: relative; }
+.node-actions details summary { cursor: pointer; color: #225d9a; padding: 4px 7px; border: 1px solid #cad6e6; border-radius: 5px; background: #fff; }
+.move-controls { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 7px; border: 1px solid #d5e0ed; background: #fff; border-radius: 8px; margin: 4px 0; }
+.move-controls select { width: auto; min-width: 185px; max-width: 100%; height: 36px; }
+.move-controls button { min-height: 36px; }
+.filter-row { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(0, 1fr) minmax(0, 1.45fr); gap: 10px; align-items: end; background: #fafbfd; border: 0; border-radius: 7px; padding: 8px; margin: 0; }
 .filter-row > div { min-width: 0; }
 .filter-fields { display: flex; gap: 7px; min-width: 0; }
 .filter-fields > div { flex: 1; min-width: 0; }
-.filter-row .remove { color: #ad3340; border-color: #ead5d9; background: white; }
+.remove { color: #a52638; border-color: #e9cad0; }
+.group-node { border: 2px solid #a5c4eb; border-left: 6px solid #6294d1; border-radius: 10px; background: #f1f6ff; padding: 10px; margin: 7px 0; }
+.group-node .group-header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.group-name { flex: 1 1 135px; min-width: 0; max-width: 240px; height: 38px !important; font-weight: 700 !important; }
+.group-op { width: auto; min-width: 175px; height: 38px; background: white; }
+.group-hint { color: #355e8f; font-size: 12px; margin: 5px 0 8px; }
+.group-children { min-height: 29px; padding: 4px 3px 4px 10px; border-left: 2px dashed #ccdbee; }
+.root-children { border-left: 0; padding-left: 0; }
+.drop-slot { height: 17px; border-radius: 5px; margin: 1px 0; border: 1px dashed transparent; }
+.drop-group, .drop-nest { color: #52739a; font-size: 12px; border: 1px dashed #b7cae0; background: #f9fcff; border-radius: 6px; padding: 6px 10px; margin: 6px 0; text-align: center; }
+.drop-nest { display: block; }
+.drag-active .drop-nest { background: #e8f3ff; }
+.drag-active .drop-slot { height: 17px; border-color: #cadef1; background: #edf5ff; }
+.drag-active .drop-group { background: #e9f3ff; border-color: #73a1de; }
+.drop-target.is-over { outline: 3px solid #2d7fd5; background: #dcecff !important; color: #124479; }
+.drag-origin { opacity: .35; }
+.group-children > .drop-slot:only-child::after { content: '（尚無條件，可拖曳放入或點「＋條件」）'; color: #7b8da5; font-size: 12px; display: block; padding: 5px; }
+.sql-preview { margin: 10px 0 0; padding: 9px 12px; border-radius: 7px; background: #f5f8fc; border: 1px solid #e0e7f0; color: #365370; font: 12px/1.65 ui-monospace, Consolas, monospace; overflow-wrap: anywhere; max-height: 165px; overflow-y: auto; white-space: pre-wrap; }
+@media (max-width: 1200px) { .filter-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .filter-row .valbox { grid-column: 1 / -1; } }
+@media (max-width: 640px) { .logic-root { padding: 10px; } .group-node { padding: 7px; } .group-children { padding-left: 4px; } .filter-row { grid-template-columns: 1fr; } .filter-row .valbox { grid-column: auto; } .drag-handle { padding: 5px 8px; } .group-name { max-width: none; } }
 hr { border: 0; border-top: 1px solid var(--line); margin: 19px 0; }
 /* 分頁工具列：欄位與操作按鈕分組，禁止被一般 formgroup 的寬度擠成直排。 */
 .pagination-toolbar { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 14px 20px; padding: 14px 16px; margin: 1px 0 15px; background: #f8fafc; border: 1px solid var(--line); border-radius: 9px; }
@@ -86,9 +117,6 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
 #tableStatus { margin: 9px 0 0; font-size: 13px; color: var(--muted); }
 @media (max-width: 1200px) {
   .pagination-toolbar { align-items: flex-end; }
-  .filter-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
-  .filter-row .valbox { grid-column: 1 / 3; }
-  .filter-row > .remove { grid-column: 3; grid-row: 1 / 3; align-self: end; }
 }
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
@@ -102,9 +130,6 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
   .layout > aside { display: block; }
   .layout > aside > .panel { margin-bottom: 16px; }
   .panel { padding: 17px 14px; }
-  .filter-row { grid-template-columns: 1fr 1fr; }
-  .filter-row .valbox { grid-column: 1/-1; }
-  .filter-row > .remove { grid-column: 2; grid-row: auto; justify-self: end; }
   .pagination-toolbar { padding: 12px; }
   .pagination-size, .pagination-page { flex: 1 1 120px; width: auto; }
   .pagination-fields { width: 100%; }
@@ -135,8 +160,16 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
     <div class="panel"><h3>⚠️ 使用限制</h3><p class="hint">網頁查詢使用訪客的電腦記憶體。完整匯出會在瀏覽器暫存結果，超大型檔案可能失敗。</p></div>
   </aside>
   <main>
-    <div class="panel"><h2>🔎 複合篩選</h2><p class="hint">每兩個條件之間都能獨立選擇 AND（且）或 OR（或），最多 10 條件。多項條件由上到下、由左至右依序運算（使用括號避免 SQL 優先順序造成誤解），按「套用篩選」才會更新查詢。</p>
-      <div id="filters"></div><div class="buttons"><button id="addFilter">＋ 新增條件</button><button id="applyFilters" class="primary">✅ 套用篩選</button><button id="resetFilters">清除已套用的條件</button></div><div id="filterInfo" class="hint mt">尚未套用條件</div></div>
+    <div class="panel"><h2>🔎 可拖曳條件群組（括號）</h2>
+      <p class="hint">抓住「⠿ 拖曳」調整順序；拖入藍色群組就進入該括號；拖到某筆條件下方的提示區，可直接將兩筆條件包成新括號。每個括號可各自選 AND／OR。設定後請按「套用篩選」。</p>
+      <div class="logic-root">
+        <div class="logic-root-head"><label for="rootJoin">最外層條件之間</label><select id="rootJoin"><option value="AND">AND（全部符合）</option><option value="OR">OR（符合任一）</option></select><span class="hint">藍色框＝一組括號，允許多層巢狀</span></div>
+        <div id="filters" class="group-children root-children" aria-label="最外層篩選條件"></div>
+      </div>
+      <div class="buttons"><button id="addFilter">＋ 新增條件</button><button id="addGroup">＋ 新增括號群組</button><button id="applyFilters" class="primary">✅ 套用篩選</button><button id="resetFilters">清除已套用的條件</button></div>
+      <div id="filterInfo" class="hint mt">尚未套用條件</div>
+      <div id="sqlPreview" class="sql-preview" aria-live="polite">查詢邏輯預覽：尚無條件</div>
+    </div>
     <div class="panel">
       <h2>📋 資料預覽</h2>
       <div class="pagination-toolbar" aria-label="資料分頁工具列">
@@ -176,100 +209,167 @@ const BUNDLES = {
   eh: { mainModule: DIST + 'duckdb-eh.wasm', mainWorker: DIST + 'duckdb-browser-eh.worker.js' },
 };
 const $ = id => document.getElementById(id);
-let duckdb, db, conn, schema=[], rows=[], activeFilters=[], activeJoins=[], filterID=0, currentPath='', fileDisplayName='', currentPage=1, localFiles=[], sourceCounter=0, busy=false, initializing=false;
-const allButtons = Array.from(document.querySelectorAll('button'));
+let duckdb, db, conn, schema=[], rows=[], activeSQL="", activeCount=0, filterID=0, groupID=0, draggedID=null, currentPath='', fileDisplayName='', currentPage=1, localFiles=[], sourceCounter=0, busy=false, initializing=false;
+const MAX_FILTERS = 50, MAX_GROUPS = 30, MAX_DEPTH = 6;
 const colQuote = name => '"' + name.replaceAll('"','""') + '"';
 const strQuote = s => "'" + String(s).replaceAll("'","''") + "'";
 const kindOf = typ => /^(DATE|TIMESTAMP|TIMESTAMPTZ)/i.test(typ) ? 'date' : /^(TINYINT|SMALLINT|INTEGER|INT\b|BIGINT|HUGEINT|UTINYINT|USMALLINT|UINTEGER|UBIGINT|UHUGEINT|FLOAT|DOUBLE|REAL|DECIMAL|BIGNUM)/i.test(typ) ? 'number' : 'text';
 function status(message, isBusy=false) { $('status').textContent=message;$('status').classList.toggle('busy',isBusy); }
 function showError(error) { $('errorBox').textContent=(error && error.message) || String(error);$('errorBox').classList.remove('hide'); console.error(error); }
 function clearError() { $('errorBox').textContent='';$('errorBox').classList.add('hide'); }
-function controls() { for (const btn of allButtons) btn.disabled=busy; $('loadLocal').disabled=busy||!conn;$('loadRemote').disabled=busy||!conn;$('loadURL').disabled=busy||!conn;  if (!busy) { $('prevPage').disabled=!currentPath||currentPage<=1; $('nextPage').disabled=!currentPath||rows.length<Number($('pageSize').value); $('downloadPage').disabled=!currentPath||!rows.length; $('countRows').disabled=!currentPath; $('applyFilters').disabled=!currentPath; $('addFilter').disabled=!currentPath; $('downloadCSV').disabled= !currentPath || (!activeFilters.length && !$('confirmAll').checked);$('downloadParquet').disabled=$('downloadCSV').disabled; } }
+function controls() { for (const btn of document.querySelectorAll('button')) btn.disabled=busy;
+ $('loadLocal').disabled=busy||!conn;$('loadRemote').disabled=busy||!conn;$('loadURL').disabled=busy||!conn;
+ if (!busy) { $('prevPage').disabled=!currentPath||currentPage<=1; $('nextPage').disabled=!currentPath||rows.length<Number($('pageSize').value); $('downloadPage').disabled=!currentPath||!rows.length; $('countRows').disabled=!currentPath; $('applyFilters').disabled=!currentPath; $('addFilter').disabled=!currentPath; $('addGroup').disabled=!currentPath; $('downloadCSV').disabled=!currentPath||(!activeCount&&!$('confirmAll').checked); $('downloadParquet').disabled=$('downloadCSV').disabled; }
+}
 async function execute(label, job) { if(busy)return;busy=true;controls();clearError();status(label,true);try{await job();status('完成：'+label);}catch(e){status('執行失敗');showError(e);}finally{busy=false;controls();} }
 function make(tag, props={}, text=null) { const el=document.createElement(tag);for(const [k,v] of Object.entries(props)){if(k==='class')el.className=v;else el[k]=v;}if(text!==null)el.textContent=text;return el; }
 function setOptions(sel, list, placeholder) { sel.replaceChildren(new Option(placeholder,''));for(const item of list) sel.add(new Option(item.name, item.value)); }
 function renderSchema(){ $('schemaCount').textContent=schema.length;const body=$('schemaBody');body.replaceChildren();for(const col of schema){const tr=make('tr');tr.append(make('td',{},col.name),make('td',{},col.type));body.append(tr);} }
-function buildFilterRow(){
- if (!schema.length) throw new Error('請先載入 Parquet 檔案。');
- if ($('filters').children.length >= 10) return;
- // 每個條件有獨立的連接詞。第一個條件前的選單自動隱藏；移除條件後也會自動重排。
- const block=make('div',{class:'filter-block'});
- const link=make('div',{class:'filter-link'});
- const joinLabel=make('label',{},'與上一個有效條件的關係');
- const join=make('select',{class:'filter-join'});
- join.add(new Option('AND（且，全部符合）','AND'));
- join.add(new Option('OR（或，符合任一）','OR'));
- joinLabel.htmlFor='filterJoin_'+(++filterID);
- join.id=joinLabel.htmlFor;
- link.append(joinLabel,join);
- const node=make('div',{class:'filter-row'});
+// HTML 直接保存篩選樹：每個 .group-children 代表一層括號，欄位值不會因拖曳而重建。
+function directNodes(area) {return [...area.children].filter(n=>n.classList.contains('logic-node'));}
+function allGroups() {return [...document.querySelectorAll('#filters .group-node')];}
+function getAreaDepth(area) {let d=0;for(let p=area.parentElement;p;p=p.parentElement)if(p.classList.contains('group-node'))d++;return d;}
+function subtreeDepth(node) {if(!node.classList.contains('group-node'))return 0;const parts=[...node.querySelector(':scope > .group-children').children].filter(n=>n.classList.contains('logic-node'));return 1+Math.max(0,...parts.map(subtreeDepth));}
+function validMove(node,area) {return !!node && !!area && !node.contains(area) && getAreaDepth(area)+subtreeDepth(node)<=MAX_DEPTH;}
+function findNode(id) {return [...document.querySelectorAll('#filters .logic-node')].find(n=>n.dataset.nodeId===id);}
+function makeGrip() {const h=make('span',{class:'drag-handle',draggable:true,role:'button',tabIndex:0},'⠿ 拖曳');h.title='滑鼠拖曳條件或群組；也可使用右側「移動／排序」';return h;}
+function makeMoveMenu(node) {
+ const menu=make('details',{class:'move-menu'}),title=make('summary',{},'移動／排序');
+ const ctl=make('div',{class:'move-controls'}),select=make('select',{class:'move-target'});
+ select.setAttribute('aria-label','將此條件移至指定群組');
+ const up=make('button',{type:'button'},'↑ 上移'),down=make('button',{type:'button'},'↓ 下移');
+ up.addEventListener('click',()=>moveSibling(node,-1));down.addEventListener('click',()=>moveSibling(node,1));
+ select.addEventListener('change',()=>{const id=select.value;if(!id)return;const area=id==='root'?$('filters'):findNode(id)?.querySelector(':scope > .group-children');
+   try{moveToArea(node,area);}catch(e){showError(e);}select.value='';});
+ ctl.append(select,up,down);menu.append(title,ctl);return menu;
+}
+function moveSibling(node,delta) {const area=node.parentElement, nodes=directNodes(area),index=nodes.indexOf(node),other=nodes[index+delta];if(!other)return;
+ if(delta<0)area.insertBefore(node,other);else area.insertBefore(other,node);
+ refreshTree();}
+function moveToArea(node,area,before=null) {if(!validMove(node,area))throw new Error('不能將群組拖進自身，或超過 '+MAX_DEPTH+' 層括號。');
+ if(before===node)return;area.insertBefore(node,before);refreshTree();}
+function createGroup() {
+ if(allGroups().length>=MAX_GROUPS)throw new Error('最多 '+MAX_GROUPS+' 個群組。');
+ const group=make('section',{class:'logic-node group-node'});group.dataset.nodeId='g_'+(++groupID);
+ const head=make('div',{class:'group-header'}),grip=makeGrip();
+ const name=make('input',{type:'text',class:'group-name',value:'括號群組 '+groupID});name.setAttribute('aria-label','群組名稱（僅供辨識）');
+ const join=make('select',{class:'group-op'});join.setAttribute('aria-label','群組內條件的組合關係');join.add(new Option('AND（群組內都符合）','AND'));join.add(new Option('OR（群組內任一符合）','OR'));
+ const add=make('button',{type:'button'},'＋條件'),addg=make('button',{type:'button'},'＋子群組'),rm=make('button',{type:'button',class:'remove'},'解除括號');
+ const move=makeMoveMenu(group);head.append(grip,name,join,add,addg,move,rm);
+ const hint=make('div',{class:'group-hint'},'（本藍框內的條件會自動包在同一對括號內）');
+ const inbox=make('div',{class:'drop-group drop-target'},'↳ 拖曳到這裡：放進這個括號');inbox.dataset.action='inside';
+ const children=make('div',{class:'group-children'});children.setAttribute('aria-label','括號內條件');
+ add.addEventListener('click',()=>{try{buildFilterRow(children);}catch(e){showError(e);}});
+ addg.addEventListener('click',()=>{try{buildGroup(children);}catch(e){showError(e);}});
+ rm.addEventListener('click',()=>{const parent=group.parentElement;for(const n of directNodes(children))parent.insertBefore(n,group);group.remove();refreshTree();});
+ group.append(head,hint,inbox,children);return group;
+}
+function buildGroup(area=$('filters')) {if(getAreaDepth(area)>=MAX_DEPTH)throw new Error('最多 '+MAX_DEPTH+' 層括號。');const g=createGroup();area.append(g);refreshTree();return g;}
+function buildFilterRow(area=$('filters')) {
+ if(!schema.length)throw new Error('請先載入 Parquet 檔案。');
+ if(document.querySelectorAll('#filters .filter-node').length>=MAX_FILTERS)throw new Error('最多 '+MAX_FILTERS+' 個篩選條件。');
+ const block=make('div',{class:'logic-node filter-node'});block.dataset.nodeId='f_'+(++filterID);
+ const top=make('div',{class:'node-top'}),grip=makeGrip(),rm=make('button',{type:'button',class:'remove'},'移除條件'),actions=make('div',{class:'node-actions'});
+ actions.append(makeMoveMenu(block),rm);top.append(grip,actions);
+ const row=make('div',{class:'filter-row'});
  const fieldWrap=make('div');fieldWrap.append(make('label',{},'欄位'));const field=make('select',{class:'filter-field'});field.add(new Option('（不使用）',''));for(const col of schema)field.add(new Option(col.name,col.name));fieldWrap.append(field);
  const opWrap=make('div');opWrap.append(make('label',{},'比較方式'));const op=make('select',{class:'filter-operator'});opWrap.append(op);
  const valWrap=make('div',{class:'valbox'});valWrap.append(make('label',{},'比較值'));const valueArea=make('div',{class:'filter-fields'});valWrap.append(valueArea);
- const rm=make('button',{type:'button',class:'remove'},'移除');rm.addEventListener('click',()=>block.remove());node.append(fieldWrap,opWrap,valWrap,rm);block.append(link,node);$('filters').append(block);
+ const nest=make('div',{class:'drop-nest drop-target'},'↳ 拖到此處：與上面這條件自動建立新括號');nest.dataset.action='pair';
+ rm.addEventListener('click',()=>{block.remove();refreshTree();});
+ row.append(fieldWrap,opWrap,valWrap);block.append(top,row,nest);area.append(block);
  function options(){const col=schema.find(c=>c.name===field.value);if(!col){op.replaceChildren(new Option('請先選欄位',''));valueArea.replaceChildren();return;}const kind=kindOf(col.type);let vals=kind==='number'?['等於','大於','大於等於','小於','小於等於','數值區間','為空值','非空值']:kind==='date'?['日期區間','等於某日','早於','晚於','為空值','非空值']:['包含','不包含','等於','開頭為','結尾為','日期區間（文字日期）','為空值','非空值'];op.replaceChildren(...vals.map(o=>new Option(o,o)));valueInput();}
- function valueInput(){valueArea.replaceChildren();const col=schema.find(c=>c.name===field.value);if(!col || ['為空值','非空值'].includes(op.value))return;let kind=kindOf(col.type),isRange=['數值區間','日期區間','日期區間（文字日期）'].includes(op.value),isDate=kind==='date'||op.value==='日期區間（文字日期）';for(let i=0;i<(isRange?2:1);i++){const input=make('input',{type:isDate?'date':kind==='number'?'number':'text'});input.dataset.value='1';if(kind==='number'){input.step='any';input.placeholder=isRange?(i?'上限（含）':'下限（含）'):'比較數值';}else if(isDate){input.value=isRange?(i?'2099-12-31':'2000-01-01'):new Date().toISOString().slice(0,10);}else input.placeholder='輸入關鍵字／文字';valueArea.append(input);} }
- field.addEventListener('change',options);op.addEventListener('change',valueInput);options();return block;
+ function valueInput(){valueArea.replaceChildren();const col=schema.find(c=>c.name===field.value);if(!col || ['為空值','非空值'].includes(op.value))return;let kind=kindOf(col.type),isRange=['數值區間','日期區間','日期區間（文字日期）'].includes(op.value),isDate=kind==='date'||op.value==='日期區間（文字日期）';for(let i=0;i<(isRange?2:1);i++){const input=make('input',{type:isDate?'date':kind==='number'?'number':'text'});if(kind==='number'){input.step='any';input.placeholder=isRange?(i?'上限（含）':'下限（含）'):'比較數值';}else if(isDate){input.value=isRange?(i?'2099-12-31':'2000-01-01'):new Date().toISOString().slice(0,10);}else input.placeholder='輸入關鍵字／文字';valueArea.append(input);} }
+ field.addEventListener('change',options);op.addEventListener('change',valueInput);options();refreshTree();return block;
 }
-function compileFilters(){
- const clauses=[],joins=[];
- const pushClause=(clause,block)=>{
-   if(clauses.length){const link=block.querySelector('.filter-join').value;if(!['AND','OR'].includes(link))throw new Error('不支援的篩選條件關係');joins.push(link);}
-   clauses.push(clause);
- };
- for(const block of $('filters').children){
-  const field=block.querySelector('.filter-field'),op=block.querySelector('.filter-operator'),name=field.value,operator=op.value;
-  if(!name)continue;
-  const col=schema.find(c=>c.name===name);if(!col)continue;
-  const q=colQuote(name),kind=kindOf(col.type),inputs=[...block.querySelectorAll('.valbox input')],raw=inputs.map(i=>i.value.trim());
-  if(operator==='為空值'){pushClause(q+' IS NULL',block);continue;}
-  if(operator==='非空值'){pushClause(q+' IS NOT NULL',block);continue;}
-  if(!raw.length || raw.some(x=>!x)){if(kind==='text')continue;throw new Error('欄位「'+name+'」請填入完整比較值。');}
-  if(operator==='數值區間' || operator==='日期區間' || operator==='日期區間（文字日期）') {
-    if(raw[0]>raw[1] && kind!=='number')throw new Error('「'+name+'」的區間下限不可大於上限。');
-    const left=operator==='日期區間（文字日期）'?`TRY_CAST(${q} AS DATE)`:kind==='date'?`CAST(${q} AS DATE)`:q;
-    const vals=kind==='number'?raw.map(x=>{const n=Number(x);if(!Number.isFinite(n))throw new Error('數值格式錯誤');return String(n);}):raw.map(strQuote);
-    if(kind==='number'&&Number(raw[0])>Number(raw[1]))throw new Error('數值下限不可大於上限。');
-    pushClause(`${left} BETWEEN ${vals[0]} AND ${vals[1]}`,block);continue;
-  }
-  if(kind==='number'){
-    const sign={'等於':'=','大於':'>','大於等於':'>=','小於':'<','小於等於':'<='}[operator],n=Number(raw[0]);
-    if(!sign||!Number.isFinite(n))throw new Error('數值比較方式或數字錯誤');
-    pushClause(`${q} ${sign} ${n}`,block);continue;
-  }
-  if(kind==='date'){
-    const sign={'等於某日':'=','早於':'<','晚於':'>'}[operator];if(!sign)throw new Error('日期比較方式錯誤');
-    pushClause(`CAST(${q} AS DATE) ${sign} ${strQuote(raw[0])}`,block);continue;
-  }
-  const fieldText=`lower(CAST(${q} AS VARCHAR))`,kw=`lower(${strQuote(raw[0])})`;let expr;
-  switch(operator){case'包含':expr=`strpos(${fieldText}, ${kw}) > 0`;break;case'不包含':expr=`strpos(${fieldText}, ${kw}) = 0`;break;case'等於':expr=`${fieldText} = ${kw}`;break;case'開頭為':expr=`starts_with(${fieldText}, ${kw})`;break;case'結尾為':expr=`ends_with(${fieldText}, ${kw})`;break;default:throw new Error('不支援的文字篩選：'+operator);}
-  pushClause(expr,block);
+function refreshSlots() {
+ for(const area of document.querySelectorAll('#filters.group-children, #filters .group-children')) {
+  for(const s of [...area.children].filter(e=>e.classList.contains('drop-slot')))s.remove();
+  for(const n of directNodes(area))area.insertBefore(make('div',{class:'drop-slot drop-target'}),n);
+  area.append(make('div',{class:'drop-slot drop-target'}));
  }
- return {clauses,joins,count:clauses.length};
 }
-function resetActive(){activeFilters=[];activeJoins=[];currentPage=1;$('pageNumber').value='1';$('rowCount').textContent='';$('confirmAll').checked=false;showApplied();}
-function formatFilterLogic(length,joins){
- if(!length)return '';
- let exp='條件 1';for(let i=1;i<length;i++)exp=`(${exp} ${joins[i-1]} 條件 ${i+1})`;
- return exp;
-}
-function showApplied(){
- const n=activeFilters.length;
- $('filterInfo').textContent=n?`目前已套用 ${n} 項篩選條件。組合邏輯：${formatFilterLogic(n,activeJoins)}。`:'目前沒有已套用的篩選條件。';
- $('allWarning').classList.toggle('hide',!!n);$('confirmAll').closest('label').classList.toggle('hide',!!n);controls();
-}
-function whereSQL(){
- if(!activeFilters.length)return '';
- let expr=`(${activeFilters[0]})`;
- // 左至右運算。例：A OR B AND C => ((A OR B) AND C)，避免 SQL 預設 AND 優先於 OR。
- for(let i=1;i<activeFilters.length;i++){
-  const op=activeJoins[i-1];if(op!=='AND'&&op!=='OR')throw new Error('篩選邏輯不完整');
-  expr=`(${expr} ${op} (${activeFilters[i]}))`;
+function updateMoveMenus() {
+ const groups=allGroups();
+ for(const node of document.querySelectorAll('#filters .logic-node')) {
+  const select=node.querySelector(':scope > .node-top .move-target, :scope > .group-header .move-target');if(!select)continue;
+  select.replaceChildren(new Option('移動到…',''),new Option('↤ 最外層','root'));
+  for(const g of groups)if(g!==node&&!node.contains(g))select.add(new Option('↳ '+g.querySelector(':scope > .group-header .group-name').value,g.dataset.nodeId));
+  select.value='';
  }
- return ' WHERE '+expr;
 }
+function refreshTree(){refreshSlots();updateMoveMenus();previewDraft();}
+function pairWithFilter(moving,target) {
+ if(moving===target||moving.contains(target))throw new Error('不能和自身、或自己的子群組形成括號。');
+ const area=target.parentElement;if(getAreaDepth(area)>=MAX_DEPTH)throw new Error('最多 '+MAX_DEPTH+' 層括號。');
+ if(allGroups().length>=MAX_GROUPS)throw new Error('群組數量已達上限。');
+ if(getAreaDepth(area)+1+Math.max(subtreeDepth(moving),0)>MAX_DEPTH)throw new Error('此拖曳會超過巢狀括號層數。');
+ const newGroup=createGroup();area.insertBefore(newGroup,target);
+ const inner=newGroup.querySelector(':scope > .group-children');inner.append(target,moving);refreshTree();
+}
+$('filters').addEventListener('dragstart',ev=>{
+ const handle=ev.target.closest('.drag-handle');if(!handle)return;
+ const node=handle.closest('.logic-node');if(!node)return;
+ draggedID=node.dataset.nodeId;ev.dataTransfer.effectAllowed='move';ev.dataTransfer.setData('text/plain',draggedID);
+ document.getElementById('filters').classList.add('drag-active');node.classList.add('drag-origin');
+});
+function clearDrag(){draggedID=null;$('filters').classList.remove('drag-active');for(const el of document.querySelectorAll('.drag-origin,.is-over'))el.classList.remove('drag-origin','is-over');}
+$('filters').addEventListener('dragend',clearDrag);
+$('filters').addEventListener('dragover',ev=>{
+ const zone=ev.target.closest('.drop-target');if(!zone||!draggedID)return;
+ const node=findNode(draggedID);let possible=false;
+ if(zone.classList.contains('drop-slot'))possible=validMove(node,zone.parentElement);
+ else if(zone.dataset.action==='inside')possible=validMove(node,zone.closest('.group-node').querySelector(':scope > .group-children'));
+ else if(zone.dataset.action==='pair'){const other=zone.closest('.filter-node');possible=node!==other&&!node.contains(other)&&getAreaDepth(other.parentElement)+1+subtreeDepth(node)<=MAX_DEPTH;}
+ if(possible){ev.preventDefault();ev.dataTransfer.dropEffect='move';for(const x of document.querySelectorAll('.is-over'))x.classList.remove('is-over');zone.classList.add('is-over');}
+});
+$('filters').addEventListener('drop',ev=>{
+ const zone=ev.target.closest('.drop-target');if(!zone)return;const node=findNode(draggedID||ev.dataTransfer.getData('text/plain'));if(!node){clearDrag();return;}
+ ev.preventDefault();try{
+  if(zone.classList.contains('drop-slot'))moveToArea(node,zone.parentElement,zone.nextElementSibling);
+  else if(zone.dataset.action==='inside')moveToArea(node,zone.closest('.group-node').querySelector(':scope > .group-children'));
+  else if(zone.dataset.action==='pair')pairWithFilter(node,zone.closest('.filter-node'));
+ }catch(e){showError(e);}finally{clearDrag();}
+});
+// 每次編輯後，立即顯示「尚未套用」的完整括號 SQL，便於確認運算邏輯。
+$('filters').addEventListener('input',previewDraft);
+$('filters').addEventListener('change',()=>{updateMoveMenus();previewDraft();});
+$('rootJoin').addEventListener('change',previewDraft);
+function compileOneFilter(block){
+ const field=block.querySelector(':scope > .filter-row .filter-field'),op=block.querySelector(':scope > .filter-row .filter-operator'),name=field.value,operator=op.value;
+ if(!name)return null;const col=schema.find(c=>c.name===name);if(!col)return null;
+ const q=colQuote(name),kind=kindOf(col.type),inputs=[...block.querySelectorAll(':scope > .filter-row .valbox input')],raw=inputs.map(i=>i.value.trim());
+ if(operator==='為空值')return q+' IS NULL';if(operator==='非空值')return q+' IS NOT NULL';
+ if(!raw.length||raw.some(x=>!x)){if(kind==='text')return null;throw new Error('欄位「'+name+'」請填入完整比較值。');}
+ if(['數值區間','日期區間','日期區間（文字日期）'].includes(operator)){
+   if(raw[0]>raw[1]&&kind!=='number')throw new Error('「'+name+'」的區間下限不可大於上限。');
+   const left=operator==='日期區間（文字日期）'?`TRY_CAST(${q} AS DATE)`:kind==='date'?`CAST(${q} AS DATE)`:q;
+   const vals=kind==='number'?raw.map(x=>{const n=Number(x);if(!Number.isFinite(n))throw new Error('數值格式錯誤');return String(n);}):raw.map(strQuote);
+   if(kind==='number'&&Number(raw[0])>Number(raw[1]))throw new Error('數值下限不可大於上限。');
+   return `${left} BETWEEN ${vals[0]} AND ${vals[1]}`;
+ }
+ if(kind==='number'){const sign={'等於':'=','大於':'>','大於等於':'>=','小於':'<','小於等於':'<='}[operator],n=Number(raw[0]);if(!sign||!Number.isFinite(n))throw new Error('數值比較方式或數字錯誤');return `${q} ${sign} ${n}`;}
+ if(kind==='date'){const sign={'等於某日':'=','早於':'<','晚於':'>'}[operator];if(!sign)throw new Error('日期比較方式錯誤');return `CAST(${q} AS DATE) ${sign} ${strQuote(raw[0])}`;}
+ const fieldText=`lower(CAST(${q} AS VARCHAR))`,kw=`lower(${strQuote(raw[0])})`;let expr;
+ switch(operator){case'包含':expr=`strpos(${fieldText}, ${kw}) > 0`;break;case'不包含':expr=`strpos(${fieldText}, ${kw}) = 0`;break;case'等於':expr=`${fieldText} = ${kw}`;break;case'開頭為':expr=`starts_with(${fieldText}, ${kw})`;break;case'結尾為':expr=`ends_with(${fieldText}, ${kw})`;break;default:throw new Error('不支援的文字篩選：'+operator);}return expr;
+}
+function compileArea(area,join){
+ if(!['AND','OR'].includes(join))throw new Error('群組的 AND／OR 設定有誤。');
+ const items=[];let count=0;
+ for(const node of directNodes(area)){
+  if(node.classList.contains('filter-node')){const s=compileOneFilter(node);if(s){items.push('('+s+')');count++;}}
+  else {const op=node.querySelector(':scope > .group-header .group-op').value,inner=node.querySelector(':scope > .group-children');const sub=compileArea(inner,op);if(sub.sql){items.push('('+sub.sql+')');count+=sub.count;}}
+ }
+ return {sql:items.length?items.join(' '+join+' '):'',count};
+}
+function compileTree(){const {sql,count}=compileArea($('filters'),$('rootJoin').value);return {sql:sql?'('+sql+')':'',count};}
+function previewDraft(){try{const {sql,count}=compileTree();$('sqlPreview').textContent=count?'待套用的 SQL 邏輯：\nWHERE '+sql:'待套用的 SQL 邏輯：尚未設定有效條件';}catch(e){$('sqlPreview').textContent='條件尚未完成：'+e.message;}}
+function resetActive(){activeSQL='';activeCount=0;currentPage=1;$('pageNumber').value='1';$('rowCount').textContent='';$('confirmAll').checked=false;showApplied();}
+function showApplied(){const n=activeCount;$('filterInfo').textContent=n?`目前已套用 ${n} 項條件（括號及 AND／OR 已納入查詢）。`:'目前沒有已套用的篩選條件。';$('allWarning').classList.toggle('hide',!!n);$('confirmAll').closest('label').classList.toggle('hide',!!n);controls();}
+function whereSQL(){return activeSQL?' WHERE '+activeSQL:'';}
+
 async function setSource(label,source){const old=currentPath;const virtual='source_'+(++sourceCounter)+'.parquet';if(source.type==='file')await db.registerFileHandle(virtual,source.file,duckdb.DuckDBDataProtocol.BROWSER_FILEREADER,true);else await db.registerFileURL(virtual,source.url,duckdb.DuckDBDataProtocol.HTTP,false);
- try{await conn.query(`CREATE OR REPLACE VIEW source_data AS SELECT * FROM read_parquet(${strQuote(virtual)})`);const table=await conn.query('DESCRIBE source_data');schema=table.toArray().map(row=>{const j=row.toJSON();return {name:j.column_name,type:j.column_type};});currentPath=virtual;fileDisplayName=label;renderSchema();$('filters').replaceChildren();resetActive();$('fileInfo').textContent='目前資料：'+label+'｜欄位數：'+schema.length;await preview();if(old&&old!==virtual){try{await db.dropFile(old);}catch(e){console.warn('卸載前一檔案失敗',e);}}}catch(e){try{await db.dropFile(virtual)}catch{}throw e;}}
+ try{await conn.query(`CREATE OR REPLACE VIEW source_data AS SELECT * FROM read_parquet(${strQuote(virtual)})`);const table=await conn.query('DESCRIBE source_data');schema=table.toArray().map(row=>{const j=row.toJSON();return {name:j.column_name,type:j.column_type};});currentPath=virtual;fileDisplayName=label;renderSchema();$('filters').replaceChildren();$('rootJoin').value='AND';refreshTree();resetActive();$('fileInfo').textContent='目前資料：'+label+'｜欄位數：'+schema.length;await preview();if(old&&old!==virtual){try{await db.dropFile(old);}catch(e){console.warn('卸載前一檔案失敗',e);}}}catch(e){try{await db.dropFile(virtual)}catch{}throw e;}}
 function valueToDisplay(v){if(v===null||v===undefined)return '';if(v instanceof Date)return v.toISOString();if(typeof v==='object'){return JSON.stringify(v,(_k,x)=>typeof x==='bigint'?String(x):x);}return String(v);}
 function getCols(table){return table.schema.fields.map(f=>f.name);}
 async function preview(){if(!currentPath)return;const n=Math.max(1,Number($('pageNumber').value)||1);const size=Number($('pageSize').value);currentPage=n;$('pageNumber').value=n;const res=await conn.query(`SELECT * FROM source_data${whereSQL()} LIMIT ${size} OFFSET ${(n-1)*size}`);const cols=getCols(res);rows=res.toArray().map(r=>r.toJSON());const head=$('previewHead'),body=$('previewBody');head.replaceChildren();body.replaceChildren();const header=make('tr');for(const col of cols)header.append(make('th',{},col));head.append(header);if(!rows.length){const tr=make('tr');const td=make('td',{},'沒有符合條件的資料，或已超出最後一頁。');td.colSpan=cols.length||1;tr.append(td);body.append(tr);}else for(const r of rows){const tr=make('tr');for(const col of cols){const td=make('td',{},valueToDisplay(r[col]));td.title=valueToDisplay(r[col]);tr.append(td);}body.append(tr);} $('tableStatus').textContent=`第 ${n} 頁｜本頁 ${rows.length} 筆｜僅查詢本頁資料`;$('prevPage').disabled=n<=1;$('nextPage').disabled=rows.length<size;}
@@ -278,7 +378,7 @@ function cleanFileName(s){return s.replace(/\.parquet$/i,'').replace(/[\\/:*?"<>
 function makeName(suffix){return cleanFileName(fileDisplayName)+'_'+suffix;}
 function csvCell(v){const s=valueToDisplay(v);return /[",\r\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}
 function downloadCurrentPage(){if(!rows.length)throw new Error('目前頁面沒有資料。');const cols=schema.map(c=>c.name);const body=[cols.map(csvCell).join(','),...rows.map(row=>cols.map(c=>csvCell(row[c])).join(','))].join('\r\n');saveBlob(new Blob(['\ufeff',body],{type:'text/csv;charset=utf-8'}),makeName('page_'+currentPage+'.csv'));}
-async function exportFull(format){if(!currentPath)throw new Error('請先開啟資料檔案。');if(!activeFilters.length&&!$('confirmAll').checked)throw new Error('請先確認要下載整份資料。');const temp='download_'+Date.now()+'_'+Math.floor(Math.random()*10000)+'.'+format;const copyOptions=format==='csv'?"FORMAT CSV, HEADER TRUE":"FORMAT PARQUET, COMPRESSION ZSTD";
+async function exportFull(format){if(!currentPath)throw new Error('請先開啟資料檔案。');if(!activeCount&&!$('confirmAll').checked)throw new Error('請先確認要下載整份資料。');const temp='download_'+Date.now()+'_'+Math.floor(Math.random()*10000)+'.'+format;const copyOptions=format==='csv'?"FORMAT CSV, HEADER TRUE":"FORMAT PARQUET, COMPRESSION ZSTD";
  try{await conn.query(`COPY (SELECT * FROM source_data${whereSQL()}) TO ${strQuote(temp)} (${copyOptions})`);const bytes=await db.copyFileToBuffer(temp);if(bytes.byteLength>500*1024*1024)console.warn('匯出檔案非常大，瀏覽器可能因記憶體不足而失敗。');const blob=format==='csv'?new Blob([new Uint8Array([0xef,0xbb,0xbf]),bytes],{type:'text/csv;charset=utf-8'}):new Blob([bytes],{type:'application/octet-stream'});saveBlob(blob,makeName('filtered_'+format+'.'+format));}finally{try{await db.dropFile(temp);}catch(e){console.warn('清理暫存檔：',e);}}}
 async function loadManifest(){try{const url=new URL('parquet-files.json',location.href);const resp=await fetch(url,{cache:'no-store'});if(!resp.ok)throw new Error('HTTP '+resp.status);const data=await resp.json();if(!Array.isArray(data))throw new Error('清單不是陣列');const entries=data.map(x=>typeof x==='string'?{name:x,url:'parquet/'+x}:{name:x.name,url:x.url}).filter(x=>x.name&&x.url);const opts=entries.map(x=>({name:x.name,value:new URL(x.url,url).href}));setOptions($('remoteList'),opts,'— 選擇網站 Parquet —');$('remoteList').dataset.loaded='1';$('fileInfo').textContent=opts.length?`找到 ${opts.length} 個網站上的資料檔；請選取後按「讀取網站資料」。`:'清單是空的，請先編輯 parquet-files.json，或開啟本機檔案。';}catch(e){setOptions($('remoteList'),[],'— 清單不存在或無法載入 —');$('remoteList').dataset.loaded='0';$('fileInfo').textContent='網站檔案清單尚未設定。仍可使用本機選檔或直接貼網址。';console.info('未載入 parquet-files.json',e.message);}}
 $('localFiles').addEventListener('change',()=>{localFiles=[...$('localFiles').files];setOptions($('localList'),localFiles.map((f,i)=>({name:f.name+' ('+(f.size/1024/1024).toFixed(1)+' MB)',value:String(i)})),'— 選擇本機 Parquet —'); if(localFiles.length===1)$('localList').value='0';});
@@ -287,7 +387,8 @@ $('loadRemote').addEventListener('click',()=>execute('讀取網站 Parquet',asyn
 $('loadURL').addEventListener('click',()=>execute('讀取遠端 Parquet',async()=>{const raw=$('customURL').value.trim();const u=new URL(raw);if(!['https:','http:'].includes(u.protocol))throw new Error('只能使用 HTTP/HTTPS 直連網址。');await setSource(decodeURIComponent(u.pathname.split('/').pop()||'remote.parquet'),{type:'url',url:u.href});}));
 $('reloadManifest').addEventListener('click',()=>execute('重新整理網站清單',loadManifest));
 $('addFilter').addEventListener('click',()=>{try{buildFilterRow();}catch(e){showError(e);}});
-$('applyFilters').addEventListener('click',()=>execute('套用篩選',async()=>{if(!currentPath)throw new Error('尚未載入資料檔案');const {clauses,joins}=compileFilters();activeFilters=clauses;activeJoins=joins;currentPage=1;$('pageNumber').value=1;$('rowCount').textContent='';showApplied();await preview();}));
+$('addGroup').addEventListener('click',()=>{try{buildGroup();}catch(e){showError(e);}});
+$('applyFilters').addEventListener('click',()=>execute('套用篩選',async()=>{if(!currentPath)throw new Error('尚未載入資料檔案');const {sql,count}=compileTree();activeSQL=sql;activeCount=count;currentPage=1;$('pageNumber').value=1;$('rowCount').textContent='';showApplied();await preview();}));
 $('resetFilters').addEventListener('click',()=>execute('清除已套用的條件',async()=>{resetActive();await preview();}));
 $('pageSize').addEventListener('change',()=>execute('更新分頁',async()=>{currentPage=1;$('pageNumber').value=1;await preview();}));
 $('goPage').addEventListener('click',()=>execute('查詢頁面',preview));
@@ -299,6 +400,7 @@ $('downloadPage').addEventListener('click',()=>{try{downloadCurrentPage();}catch
 $('downloadCSV').addEventListener('click',()=>execute('匯出完整 CSV（大量資料可能耗盡記憶體）',()=>exportFull('csv')));
 $('downloadParquet').addEventListener('click',()=>execute('匯出完整 Parquet（大量資料可能耗盡記憶體）',()=>exportFull('parquet')));
 $('confirmAll').addEventListener('change',controls);
+refreshTree();
 // 診斷功能：無論程式庫成功與否，都可顯示明確錯誤資訊，不再停留在「系統準備中」。
 window.addEventListener('unhandledrejection', ev => { if(!conn) { status('DuckDB-Wasm 載入異常'); showError(ev.reason || '未知 Promise 錯誤'); } });
 window.addEventListener('error', ev => { if(!conn) { status('JavaScript 執行發生錯誤'); showError(ev.message || '請打開 F12 Console 查看詳細錯誤'); } });
