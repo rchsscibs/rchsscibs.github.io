@@ -149,10 +149,25 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
 .rules-transfer .transfer-message { font-size: 13px; margin-top: 12px; white-space: pre-wrap; }
 .rules-transfer .transfer-message.success { background: #effcf6; border-color: #c9eedf; color: #116a46; }
 .rules-transfer .transfer-message.error { background: #fff3f2; border-color: #ffcfcc; color: var(--red); }
+/* v9：匯出欄位自選，預設保留全欄位；與篩選條件互不干擾。 */
+.output-picker { margin: 16px 0 18px; padding: 15px 16px; border: 1px solid #c8d9ef; border-radius: 10px; background: #f8fbff; }
+.output-picker h3 { margin: 0 0 5px; font-size: 16px; }
+.output-picker .buttons { margin: 12px 0; }
+.output-search { max-width: 410px; margin: 12px 0 10px; }
+.output-search label { margin-bottom: 5px; }
+.output-column-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 5px 10px; padding: 10px; max-height: 260px; overflow-y: auto; background: #fff; border: 1px solid #dae4f0; border-radius: 8px; }
+.output-column-item { display: flex; gap: 9px; align-items: flex-start; min-width: 0; padding: 7px 8px; margin: 0; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; overflow-wrap: anywhere; }
+.output-column-item:hover { background: #f1f7ff; }
+.output-column-item input { flex: 0 0 auto; width: 17px; height: 17px; margin: 2px 0 0; accent-color: var(--blue); }
+.output-column-name { min-width: 0; overflow-wrap: anywhere; }
+#outputColumnInfo { margin: 10px 0 0; font-size: 13px; color: #325f8a; overflow-wrap: anywhere; }
+#outputColumnInfo.error { color: var(--red); }
+#outputSearchInfo { margin: 3px 0 0; }
+@media (max-width: 640px) { .output-picker { padding: 12px; } .output-column-list { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>🗂️ 大型 Parquet 資料瀏覽器 <span class="badge">v8</span></h1></div></header>
+<header><div class="header-inner"><h1>🗂️ 大型 Parquet 資料瀏覽器 <span class="badge">v9.1</span></h1></div></header>
 <div class="layout">
   <aside>
     <div class="panel">
@@ -184,7 +199,7 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
       <div id="sqlPreview" class="sql-preview" aria-live="polite">查詢邏輯預覽：尚無條件</div>
       <details class="rules-transfer" id="rulesTransfer">
         <summary>💾 儲存／匯入篩選公式（JSON）</summary>
-        <p class="hint">儲存目前畫面上的<strong>條件、括號層級、AND／OR 與比較值</strong>。JSON 可以用記事本或 VS Code 編輯後匯入；不含 Parquet 資料本身。匯入後請按「套用篩選」，不會自動查詢。</p>
+        <p class="hint">儲存目前畫面上的<strong>條件、括號層級、AND／OR、比較值及匯出欄位選擇</strong>。JSON 可以用記事本或 VS Code 編輯後匯入；不含 Parquet 資料本身。匯入後請按「套用篩選」，不會自動查詢。舊版 JSON 仍可匯入。</p>
         <div class="buttons">
           <button id="exportRules" type="button">⬇️ 匯出公式 JSON</button>
           <button id="exportSQL" type="button">⬇️ 匯出 SQL（參考用）</button>
@@ -226,7 +241,26 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
           <button id="goPage" type="button">前往頁面</button>
         </div>
       </div><div id="previewBox" class="tablewrap"><table><thead id="previewHead"></thead><tbody id="previewBody"><tr><td class="muted">請先選擇資料來源</td></tr></tbody></table></div><p id="tableStatus"></p><div class="buttons mt"><button id="downloadPage">⬇️ 下載本頁 CSV（UTF-8-SIG）</button><button id="countRows">計算符合條件的總筆數</button><span id="rowCount" class="muted"></span></div></div>
-    <div class="panel"><h2>⬇️ 下載完整篩選結果</h2><p class="hint">由瀏覽器 DuckDB 產生符合已套用篩選的資料。CSV 加 UTF-8 BOM（Excel 中文較不易亂碼），Parquet 使用 ZSTD 壓縮。匯出暫存檔完成後清除。</p><div id="allWarning" class="alert">目前未套用篩選，下載將包含整份資料。</div><label class="mt" style="font-weight:normal"><input type="checkbox" id="confirmAll"> 我確認要下載整份未篩選的資料</label><div class="buttons mt"><button id="downloadCSV" class="primary">📄 下載完整 CSV</button><button id="downloadParquet" class="primary">📦 下載完整 Parquet（ZSTD）</button></div><p class="hint">注意：完整匯出受瀏覽器記憶體限制，不保證能處理數 GB 的輸出。</p></div>
+    <div class="panel">
+      <h2>⬇️ 下載完整篩選結果</h2>
+      <p class="hint">由瀏覽器 DuckDB 產生符合已套用篩選的資料。CSV 加 UTF-8 BOM（Excel 中文較不易亂碼），Parquet 使用 ZSTD 壓縮。匯出暫存檔完成後清除。</p>
+      <section class="output-picker" aria-label="匯出欄位選擇">
+        <h3>🎯 自由選擇要輸出的欄位 <span id="outputColumnCount" class="badge">0 / 0 欄</span></h3>
+        <p class="hint">預設輸出所有欄位。可自由勾選想要的欄位，或按「已套用篩選欄位」快速選取。<strong>只影響下載本頁 CSV、完整 CSV 與完整 Parquet</strong>；不改變篩選條件與畫面預覽。匯出欄位順序依原始資料排列。</p>
+        <div class="buttons">
+          <button id="outputSelectAll" type="button">☑ 全選全部欄位</button>
+          <button id="outputSelectFiltered" type="button">🔎 已套用篩選欄位</button>
+          <button id="outputSelectNone" type="button">☐ 全部取消</button>
+        </div>
+        <div class="output-search formgroup"><label for="outputColumnSearch">搜尋欄位名稱（搜尋不會改變勾選）</label><input id="outputColumnSearch" type="text" placeholder="輸入欄位名稱快速尋找" disabled><p id="outputSearchInfo" class="hint" aria-live="polite"></p></div>
+        <div id="outputColumnList" class="output-column-list" role="group" aria-label="選擇下載欄位"><span class="muted">請先讀取資料檔案，載入可選擇的欄位。</span></div>
+        <p id="outputColumnInfo" role="status" aria-live="polite">尚未載入欄位。</p>
+      </section>
+      <div id="allWarning" class="alert">目前未套用篩選，下載將包含整份資料。</div>
+      <label class="mt" style="font-weight:normal"><input type="checkbox" id="confirmAll"> 我確認要下載整份未篩選的資料</label>
+      <div class="buttons mt"><button id="downloadCSV" class="primary">📄 下載完整 CSV</button><button id="downloadParquet" class="primary">📦 下載完整 Parquet（ZSTD）</button></div>
+      <p class="hint">請至少勾選 1 個匯出欄位。注意：完整匯出受瀏覽器記憶體限制，不保證能處理數 GB 的輸出。</p>
+    </div>
     <div class="panel"><h3>系統狀態</h3><div id="status">準備載入 DuckDB-Wasm…</div><p class="hint">如果長時間沒有反應，請查看下方錯誤訊息。</p><div id="errorBox" class="alert error hide"></div></div>
   </main>
 </div>
@@ -246,7 +280,7 @@ const BUNDLES = {
   eh: { mainModule: DIST + 'duckdb-eh.wasm', mainWorker: DIST + 'duckdb-browser-eh.worker.js' },
 };
 const $ = id => document.getElementById(id);
-let duckdb, db, conn, schema=[], rows=[], activeSQL="", activeCount=0, filterID=0, groupID=0, draggedID=null, currentPath='', fileDisplayName='', currentPage=1, localFiles=[], sourceCounter=0, busy=false, initializing=false;
+let duckdb, db, conn, schema=[], rows=[], activeSQL="", activeCount=0, activeFilterFields=[], selectedOutputColumns=new Set(), filterID=0, groupID=0, draggedID=null, currentPath='', fileDisplayName='', currentPage=1, localFiles=[], sourceCounter=0, busy=false, initializing=false;
 const MAX_FILTERS = 50, MAX_GROUPS = 30, MAX_DEPTH = 6;
 const colQuote = name => '"' + name.replaceAll('"','""') + '"';
 const strQuote = s => "'" + String(s).replaceAll("'","''") + "'";
@@ -256,12 +290,50 @@ function showError(error) { $('errorBox').textContent=(error && error.message) |
 function clearError() { $('errorBox').textContent='';$('errorBox').classList.add('hide'); }
 function controls() { for (const btn of document.querySelectorAll('button')) btn.disabled=busy;
  $('loadLocal').disabled=busy||!conn;$('loadRemote').disabled=busy||!conn;$('loadURL').disabled=busy||!conn;
- if (!busy) { $('prevPage').disabled=!currentPath||currentPage<=1; $('nextPage').disabled=!currentPath||rows.length<Number($('pageSize').value); $('downloadPage').disabled=!currentPath||!rows.length; $('countRows').disabled=!currentPath; $('applyFilters').disabled=!currentPath; $('addFilter').disabled=!currentPath; $('addGroup').disabled=!currentPath; $('downloadCSV').disabled=!currentPath||(!activeCount&&!$('confirmAll').checked); $('downloadParquet').disabled=$('downloadCSV').disabled; for(const id of ['exportRules','exportSQL','openRulesEditor','importRulesText','reloadRulesText']) $(id).disabled=!currentPath; $('importRulesFile').disabled=!currentPath; }
+ if (!busy) { $('prevPage').disabled=!currentPath||currentPage<=1; $('nextPage').disabled=!currentPath||rows.length<Number($('pageSize').value); $('downloadPage').disabled=!currentPath||!rows.length||!selectedOutputColumns.size; $('countRows').disabled=!currentPath; $('applyFilters').disabled=!currentPath; $('addFilter').disabled=!currentPath; $('addGroup').disabled=!currentPath; $('downloadCSV').disabled=!currentPath||!selectedOutputColumns.size||(!activeCount&&!$('confirmAll').checked); $('downloadParquet').disabled=$('downloadCSV').disabled; for(const id of ['exportRules','exportSQL','openRulesEditor','importRulesText','reloadRulesText']) $(id).disabled=!currentPath; $('importRulesFile').disabled=!currentPath;
+  for(const id of ['outputSelectAll','outputSelectNone']) $(id).disabled=!currentPath;
+  $('outputSelectFiltered').disabled=!currentPath||!activeCount;
+  $('outputColumnSearch').disabled=!currentPath;
+ }
 }
 async function execute(label, job) { if(busy)return;busy=true;controls();clearError();status(label,true);try{await job();status('完成：'+label);}catch(e){status('執行失敗');showError(e);}finally{busy=false;controls();} }
 function make(tag, props={}, text=null) { const el=document.createElement(tag);for(const [k,v] of Object.entries(props)){if(k==='class')el.className=v;else el[k]=v;}if(text!==null)el.textContent=text;return el; }
 function setOptions(sel, list, placeholder) { sel.replaceChildren(new Option(placeholder,''));for(const item of list) sel.add(new Option(item.name, item.value)); }
 function renderSchema(){ $('schemaCount').textContent=schema.length;const body=$('schemaBody');body.replaceChildren();for(const col of schema){const tr=make('tr');tr.append(make('td',{},col.name),make('td',{},col.type));body.append(tr);} }
+// 從 DESCRIBE 得到的 schema 當成唯一合法欄位來源；SQL 必須使用雙引號安全引用。
+function getOutputColumns(){return schema.filter(c=>selectedOutputColumns.has(c.name)).map(c=>c.name);}
+function outputSelectSQL(){const cols=getOutputColumns();if(!cols.length)throw new Error('請先在「自由選擇要輸出的欄位」勾選至少 1 個欄位。');return cols.map(colQuote).join(', ');}
+function refreshOutputColumnInfo(){
+ const cols=getOutputColumns();$('outputColumnCount').textContent=`${cols.length} / ${schema.length} 欄`;
+ const summary=$('outputColumnInfo');summary.classList.toggle('error',!cols.length);
+ summary.textContent=!schema.length?'尚未載入欄位。':!cols.length?'尚未選擇任何欄位；請至少勾選 1 個，才能下載。':
+  `下載將包含 ${cols.length} 欄：${cols.slice(0,8).join('、')}${cols.length>8?` 等（另有 ${cols.length-8} 欄）`:''}。`;
+ controls();
+}
+function updateOutputColumnSearch(){
+ const keyword=$('outputColumnSearch').value.trim().toLocaleLowerCase();let count=0;
+ for(const label of $('outputColumnList').querySelectorAll('.output-column-item')){
+  const visible=label.querySelector('input').value.toLocaleLowerCase().includes(keyword);
+  label.classList.toggle('hide',!visible);if(visible)count++;
+ }
+ $('outputSearchInfo').textContent=keyword?`找到 ${count} / ${schema.length} 個欄位。${count?'':'請換個關鍵字。'}`:'';
+}
+function syncOutputColumnChecks(){
+ for(const input of $('outputColumnList').querySelectorAll('input[type="checkbox"]'))input.checked=selectedOutputColumns.has(input.value);
+ refreshOutputColumnInfo();
+}
+function chooseOutputColumns(names){const allowed=new Set(schema.map(c=>c.name));selectedOutputColumns=new Set(names.filter(name=>allowed.has(name)));syncOutputColumnChecks();}
+function renderOutputColumns(){
+ $('outputColumnSearch').value='';const list=$('outputColumnList');list.replaceChildren();
+ if(!schema.length)list.append(make('span',{class:'muted'},'尚未載入任何可選欄位。'));
+ for(const col of schema){
+  const label=make('label',{class:'output-column-item'}),check=make('input',{type:'checkbox',value:col.name}),name=make('span',{class:'output-column-name'},col.name);
+  check.checked=selectedOutputColumns.has(col.name);
+  check.addEventListener('change',()=>{if(check.checked)selectedOutputColumns.add(col.name);else selectedOutputColumns.delete(col.name);refreshOutputColumnInfo();});
+  label.append(check,name);list.append(label);
+ }
+ updateOutputColumnSearch();refreshOutputColumnInfo();
+}
 // HTML 直接保存篩選樹：每個 .group-children 代表一層括號，欄位值不會因拖曳而重建。
 function directNodes(area) {return [...area.children].filter(n=>n.classList.contains('logic-node'));}
 function allGroups() {return [...document.querySelectorAll('#filters .group-node')];}
@@ -406,12 +478,12 @@ function compileArea(area,join){
 }
 function compileTree(){const {sql,count}=compileArea($('filters'),$('rootJoin').value);return {sql:sql?'('+sql+')':'',count};}
 function previewDraft(){try{const {sql,count}=compileTree();$('sqlPreview').textContent=count?'待套用的 SQL 邏輯：\nWHERE '+sql:'待套用的 SQL 邏輯：尚未設定有效條件';}catch(e){$('sqlPreview').textContent='條件尚未完成：'+e.message;}}
-function resetActive(){activeSQL='';activeCount=0;currentPage=1;$('pageNumber').value='1';$('rowCount').textContent='';$('confirmAll').checked=false;showApplied();}
+function resetActive(){activeSQL='';activeCount=0;activeFilterFields=[];currentPage=1;$('pageNumber').value='1';$('rowCount').textContent='';$('confirmAll').checked=false;showApplied();}
 function showApplied(){const n=activeCount;$('filterInfo').textContent=n?`目前已套用 ${n} 項條件（括號及 AND／OR 已納入查詢）。`:'目前沒有已套用的篩選條件。';$('allWarning').classList.toggle('hide',!!n);$('confirmAll').closest('label').classList.toggle('hide',!!n);controls();}
 function whereSQL(){return activeSQL?' WHERE '+activeSQL:'';}
 
 async function setSource(label,source){const old=currentPath;const virtual='source_'+(++sourceCounter)+'.parquet';if(source.type==='file')await db.registerFileHandle(virtual,source.file,duckdb.DuckDBDataProtocol.BROWSER_FILEREADER,true);else await db.registerFileURL(virtual,source.url,duckdb.DuckDBDataProtocol.HTTP,false);
- try{await conn.query(`CREATE OR REPLACE VIEW source_data AS SELECT * FROM read_parquet(${strQuote(virtual)})`);const table=await conn.query('DESCRIBE source_data');schema=table.toArray().map(row=>{const j=row.toJSON();return {name:j.column_name,type:j.column_type};});currentPath=virtual;fileDisplayName=label;renderSchema();$('filters').replaceChildren();$('rootJoin').value='AND';refreshTree();resetActive();clearRulesMessage();$('rulesEditor').classList.add('hide');$('rulesText').value='';$('fileInfo').textContent='目前資料：'+label+'｜欄位數：'+schema.length;await preview();if(old&&old!==virtual){try{await db.dropFile(old);}catch(e){console.warn('卸載前一檔案失敗',e);}}}catch(e){try{await db.dropFile(virtual)}catch{}throw e;}}
+ try{await conn.query(`CREATE OR REPLACE VIEW source_data AS SELECT * FROM read_parquet(${strQuote(virtual)})`);const table=await conn.query('DESCRIBE source_data');schema=table.toArray().map(row=>{const j=row.toJSON();return {name:j.column_name,type:j.column_type};});currentPath=virtual;fileDisplayName=label;selectedOutputColumns=new Set(schema.map(c=>c.name));renderSchema();renderOutputColumns();$('filters').replaceChildren();$('rootJoin').value='AND';refreshTree();resetActive();clearRulesMessage();$('rulesEditor').classList.add('hide');$('rulesText').value='';$('fileInfo').textContent='目前資料：'+label+'｜欄位數：'+schema.length;await preview();if(old&&old!==virtual){try{await db.dropFile(old);}catch(e){console.warn('卸載前一檔案失敗',e);}}}catch(e){try{await db.dropFile(virtual)}catch{}throw e;}}
 function valueToDisplay(v){if(v===null||v===undefined)return '';if(v instanceof Date)return v.toISOString();if(typeof v==='object'){return JSON.stringify(v,(_k,x)=>typeof x==='bigint'?String(x):x);}return String(v);}
 function getCols(table){return table.schema.fields.map(f=>f.name);}
 async function preview(){if(!currentPath)return;const n=Math.max(1,Number($('pageNumber').value)||1);const size=Number($('pageSize').value);currentPage=n;$('pageNumber').value=n;const res=await conn.query(`SELECT * FROM source_data${whereSQL()} LIMIT ${size} OFFSET ${(n-1)*size}`);const cols=getCols(res);rows=res.toArray().map(r=>r.toJSON());const head=$('previewHead'),body=$('previewBody');head.replaceChildren();body.replaceChildren();const header=make('tr');for(const col of cols)header.append(make('th',{},col));head.append(header);if(!rows.length){const tr=make('tr');const td=make('td',{},'沒有符合條件的資料，或已超出最後一頁。');td.colSpan=cols.length||1;tr.append(td);body.append(tr);}else for(const r of rows){const tr=make('tr');for(const col of cols){const td=make('td',{},valueToDisplay(r[col]));td.title=valueToDisplay(r[col]);tr.append(td);}body.append(tr);} $('tableStatus').textContent=`第 ${n} 頁｜本頁 ${rows.length} 筆｜僅查詢本頁資料`;$('prevPage').disabled=n<=1;$('nextPage').disabled=rows.length<size;}
@@ -419,9 +491,9 @@ function saveBlob(blob,filename){const url=URL.createObjectURL(blob);const a=mak
 function cleanFileName(s){return s.replace(/\.parquet$/i,'').replace(/[\\/:*?"<>|]+/g,'_').slice(0,90)||'result';}
 function makeName(suffix){return cleanFileName(fileDisplayName)+'_'+suffix;}
 function csvCell(v){const s=valueToDisplay(v);return /[",\r\n]/.test(s)?'"'+s.replaceAll('"','""')+'"':s;}
-function downloadCurrentPage(){if(!rows.length)throw new Error('目前頁面沒有資料。');const cols=schema.map(c=>c.name);const body=[cols.map(csvCell).join(','),...rows.map(row=>cols.map(c=>csvCell(row[c])).join(','))].join('\r\n');saveBlob(new Blob(['\ufeff',body],{type:'text/csv;charset=utf-8'}),makeName('page_'+currentPage+'.csv'));}
+function downloadCurrentPage(){if(!rows.length)throw new Error('目前頁面沒有資料。');const cols=getOutputColumns();if(!cols.length)throw new Error('請先勾選至少 1 個匯出欄位。');const body=[cols.map(csvCell).join(','),...rows.map(row=>cols.map(c=>csvCell(row[c])).join(','))].join('\r\n');saveBlob(new Blob(['\ufeff',body],{type:'text/csv;charset=utf-8'}),makeName('page_'+currentPage+'.csv'));}
 async function exportFull(format){if(!currentPath)throw new Error('請先開啟資料檔案。');if(!activeCount&&!$('confirmAll').checked)throw new Error('請先確認要下載整份資料。');const temp='download_'+Date.now()+'_'+Math.floor(Math.random()*10000)+'.'+format;const copyOptions=format==='csv'?"FORMAT CSV, HEADER TRUE":"FORMAT PARQUET, COMPRESSION ZSTD";
- try{await conn.query(`COPY (SELECT * FROM source_data${whereSQL()}) TO ${strQuote(temp)} (${copyOptions})`);const bytes=await db.copyFileToBuffer(temp);if(bytes.byteLength>500*1024*1024)console.warn('匯出檔案非常大，瀏覽器可能因記憶體不足而失敗。');const blob=format==='csv'?new Blob([new Uint8Array([0xef,0xbb,0xbf]),bytes],{type:'text/csv;charset=utf-8'}):new Blob([bytes],{type:'application/octet-stream'});saveBlob(blob,makeName('filtered_'+format+'.'+format));}finally{try{await db.dropFile(temp);}catch(e){console.warn('清理暫存檔：',e);}}}
+ try{await conn.query(`COPY (SELECT ${outputSelectSQL()} FROM source_data${whereSQL()}) TO ${strQuote(temp)} (${copyOptions})`);const bytes=await db.copyFileToBuffer(temp);if(bytes.byteLength>500*1024*1024)console.warn('匯出檔案非常大，瀏覽器可能因記憶體不足而失敗。');const blob=format==='csv'?new Blob([new Uint8Array([0xef,0xbb,0xbf]),bytes],{type:'text/csv;charset=utf-8'}):new Blob([bytes],{type:'application/octet-stream'});saveBlob(blob,makeName('filtered_'+format+'.'+format));}finally{try{await db.dropFile(temp);}catch(e){console.warn('清理暫存檔：',e);}}}
 async function loadManifest(){try{const url=new URL('parquet-files.json',location.href);const resp=await fetch(url,{cache:'no-store'});if(!resp.ok)throw new Error('HTTP '+resp.status);const data=await resp.json();if(!Array.isArray(data))throw new Error('清單不是陣列');const entries=data.map(x=>typeof x==='string'?{name:x,url:'parquet/'+x}:{name:x.name,url:x.url}).filter(x=>x.name&&x.url);const opts=entries.map(x=>({name:x.name,value:new URL(x.url,url).href}));setOptions($('remoteList'),opts,'— 選擇網站 Parquet —');$('remoteList').dataset.loaded='1';$('fileInfo').textContent=opts.length?`找到 ${opts.length} 個網站上的資料檔；請選取後按「讀取網站資料」。`:'清單是空的，請先編輯 parquet-files.json，或開啟本機檔案。';}catch(e){setOptions($('remoteList'),[],'— 清單不存在或無法載入 —');$('remoteList').dataset.loaded='0';$('fileInfo').textContent='網站檔案清單尚未設定。仍可使用本機選檔或直接貼網址。';console.info('未載入 parquet-files.json',e.message);}}
 $('localFiles').addEventListener('change',()=>{localFiles=[...$('localFiles').files];setOptions($('localList'),localFiles.map((f,i)=>({name:f.name+' ('+(f.size/1024/1024).toFixed(1)+' MB)',value:String(i)})),'— 選擇本機 Parquet —'); if(localFiles.length===1)$('localList').value='0';});
 $('loadLocal').addEventListener('click',()=>execute('讀取本機 Parquet',async()=>{const idx=$('localList').value;if(idx==='')throw new Error('請選擇本機檔案。');const f=localFiles[Number(idx)];await setSource(f.name,{type:'file',file:f});}));
@@ -430,7 +502,7 @@ $('loadURL').addEventListener('click',()=>execute('讀取遠端 Parquet',async()
 $('reloadManifest').addEventListener('click',()=>execute('重新整理網站清單',loadManifest));
 $('addFilter').addEventListener('click',()=>{try{buildFilterRow();}catch(e){showError(e);}});
 $('addGroup').addEventListener('click',()=>{try{buildGroup();}catch(e){showError(e);}});
-$('applyFilters').addEventListener('click',()=>execute('套用篩選',async()=>{if(!currentPath)throw new Error('尚未載入資料檔案');const {sql,count}=compileTree();activeSQL=sql;activeCount=count;currentPage=1;$('pageNumber').value=1;$('rowCount').textContent='';showApplied();await preview();}));
+$('applyFilters').addEventListener('click',()=>execute('套用篩選',async()=>{if(!currentPath)throw new Error('尚未載入資料檔案');const {sql,count}=compileTree();activeSQL=sql;activeCount=count;activeFilterFields=[...new Set([...document.querySelectorAll('#filters .filter-node')].filter(node=>compileOneFilter(node)).map(node=>node.querySelector('.filter-field').value))];currentPage=1;$('pageNumber').value=1;$('rowCount').textContent='';showApplied();await preview();}));
 $('resetFilters').addEventListener('click',()=>execute('清除已套用的條件',async()=>{resetActive();await preview();}));
 $('pageSize').addEventListener('change',()=>execute('更新分頁',async()=>{currentPage=1;$('pageNumber').value=1;await preview();}));
 $('goPage').addEventListener('click',()=>execute('查詢頁面',preview));
@@ -442,6 +514,13 @@ $('downloadPage').addEventListener('click',()=>{try{downloadCurrentPage();}catch
 $('downloadCSV').addEventListener('click',()=>execute('匯出完整 CSV（大量資料可能耗盡記憶體）',()=>exportFull('csv')));
 $('downloadParquet').addEventListener('click',()=>execute('匯出完整 Parquet（大量資料可能耗盡記憶體）',()=>exportFull('parquet')));
 $('confirmAll').addEventListener('change',controls);
+$('outputColumnSearch').addEventListener('input',updateOutputColumnSearch);
+$('outputSelectAll').addEventListener('click',()=>chooseOutputColumns(schema.map(c=>c.name)));
+$('outputSelectNone').addEventListener('click',()=>chooseOutputColumns([]));
+$('outputSelectFiltered').addEventListener('click',()=>{
+ if(!activeCount)return;
+ chooseOutputColumns(activeFilterFields);
+});
 
 // --- v8: 可攜式、可手動編輯的 JSON 篩選公式 (非 SQL 執行器) ---
 const RULES_FORMAT = 'parquet-filter-tree';
@@ -472,6 +551,7 @@ function serializeRules() {
   .map(name=>{const col=schema.find(c=>c.name===name);return {name,kind:kindOf(col.type)};});
  return {format:RULES_FORMAT,version:RULES_VERSION,
    source:{file:fileDisplayName,columns},
+   outputColumns:getOutputColumns(),
    query:{join:$('rootJoin').value,children:rulesChildren($('filters'))}};
 }
 function rulesJSONString(){return JSON.stringify(serializeRules(),null,2)+'\n';}
@@ -530,6 +610,12 @@ function validateRules(obj) {
    if(target&&kindOf(target.type)!==item.kind)throw new Error('欄位「'+item.name+'」的型態不相容：來源 '+item.kind+'，目前 '+kindOf(target.type)+'。');
   }
  }
+ if(obj.outputColumns!==undefined){
+  if(!Array.isArray(obj.outputColumns)||obj.outputColumns.length>schema.length||obj.outputColumns.some(name=>typeof name!=='string'||!lookup.has(name)))
+   throw new Error('outputColumns 必須是目前資料表中存在的欄位名稱陣列。');
+  if(new Set(obj.outputColumns).size!==obj.outputColumns.length)throw new Error('outputColumns 不可重複。');
+  tree.outputColumns=[...obj.outputColumns];
+ }else tree.outputColumns=null; // 舊版 JSON 沒有輸出欄位設定：保留目前選擇。
  return tree;
 }
 function populateRulesArea(area,nodes){
@@ -559,6 +645,7 @@ function importRulesObject(obj){
  $('filters').replaceChildren(...staging.childNodes);
  $('rootJoin').value=tree.join;
  refreshTree();
+ if(tree.outputColumns!==null)chooseOutputColumns(tree.outputColumns);
  const name=typeof obj.source?.file==='string'?obj.source.file:'';
  const warning=name&&name!==fileDisplayName?'（注意：原設定來自「'+name+'」，目前資料為「'+fileDisplayName+'」，請確認篩選值適用。）':'';
  rulesMessage('✅ 已還原 '+document.querySelectorAll('#filters .filter-node').length+' 條件、'+allGroups().length+' 個括號群組。'+warning+'\n請檢查 SQL 預覽並按「✅ 套用篩選」；匯入不會立即影響目前的查詢結果。');
@@ -573,9 +660,9 @@ $('exportRules').addEventListener('click',()=>{try{clearRulesMessage();saveBlob(
 $('exportSQL').addEventListener('click',()=>{try{
  clearRulesMessage();if(!currentPath)throw new Error('請先開啟 Parquet。');
  const {sql,count}=compileTree();if(!count)throw new Error('沒有有效條件可匯出 SQL。');
- const output='-- Parquet 資料瀏覽器 v8；參考用 SQL，不能直接匯入本網頁\n'
+ const output='-- Parquet 資料瀏覽器 v9；參考用 SQL，不能直接匯入本網頁\n'
    +'-- 可自行替換下方 read_parquet() 路徑，再於 DuckDB 執行。\n'
-   +'SELECT *\nFROM read_parquet('+strQuote(fileDisplayName)+')\nWHERE '+sql+';\n';
+   +'SELECT '+outputSelectSQL()+'\nFROM read_parquet('+strQuote(fileDisplayName)+')\nWHERE '+sql+';\n';
  saveBlob(new Blob(['\ufeff',output],{type:'text/plain;charset=utf-8'}),makeName('query.sql'));
  rulesMessage('✅ 已下載 SQL 文字檔。需要匯回本網頁、繼續拖曳修改時，請使用 JSON 公式。');
  }catch(e){handleRulesError(e);}});
