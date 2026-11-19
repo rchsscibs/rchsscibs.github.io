@@ -1,0 +1,878 @@
+[
+  {
+    "name": "Beneficial Owners (Delta)/beneficial_owners_10_10",
+    "url": "Orbis_202611_sample/Beneficial Owners (Delta)/beneficial_owners_10_10/beneficial_owners_10_10_sample100.parquet"
+  },
+  {
+    "name": "Beneficial Owners (Monthly)/beneficial_owners_10_10",
+    "url": "Orbis_202611_sample/Beneficial Owners (Monthly)/beneficial_owners_10_10/beneficial_owners_10_10_sample100.parquet"
+  },
+  {
+    "name": "BvD ID Changes/bvd_id_changes_full",
+    "url": "Orbis_202611_sample/BvD ID Changes/bvd_id_changes_full/bvd_id_changes_full_sample100.parquet"
+  },
+  {
+    "name": "Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_additional",
+    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_additional/crossborder_investment__monthly__ocbi_projects_additional_sample100.parquet"
+  },
+  {
+    "name": "Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_dates",
+    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_dates/crossborder_investment__monthly__ocbi_projects_dates_sample100.parquet"
+  },
+  {
+    "name": "Crossborder Investment (Monthly)/ocbi_companies",
+    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/ocbi_companies/ocbi_companies_sample100.parquet"
+  },
+  {
+    "name": "Crossborder Investment (Monthly)/ocbi_deals",
+    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/ocbi_deals/ocbi_deals_sample100.parquet"
+  },
+  {
+    "name": "Crossborder Investment (Monthly)/ocbi_projects",
+    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/ocbi_projects/ocbi_projects_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios/orbis_monthly_banks_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios_eur/orbis_monthly_banks_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios_usd/orbis_monthly_banks_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_industry_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_industry_global_financials_and_ratios/orbis_monthly_industry_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_industry_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_industry_global_financials_and_ratios_eur/orbis_monthly_industry_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_industry_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_industry_global_financials_and_ratios_usd/orbis_monthly_industry_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_insurances_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_insurances_global_financials_and_ratios/orbis_monthly_insurances_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_insurances_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_insurances_global_financials_and_ratios_eur/orbis_monthly_insurances_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Detailed Financials (Monthly)/orbis_monthly_insurances_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_insurances_global_financials_and_ratios_usd/orbis_monthly_insurances_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Detailed Ownership (Monthly)/entities",
+    "url": "Orbis_202611_sample/Detailed Ownership (Monthly)/entities/entities_sample100.parquet"
+  },
+  {
+    "name": "Detailed Ownership (Monthly)/links_current",
+    "url": "Orbis_202611_sample/Detailed Ownership (Monthly)/links_current/links_current_sample100.parquet"
+  },
+  {
+    "name": "Detailed Ownership with History (Monthly)/entitieswitharchive",
+    "url": "Orbis_202611_sample/Detailed Ownership with History (Monthly)/entitieswitharchive/entitieswitharchive_sample100.parquet"
+  },
+  {
+    "name": "Detailed Ownership with History (Monthly)/linkswitharchive",
+    "url": "Orbis_202611_sample/Detailed Ownership with History (Monthly)/linkswitharchive/linkswitharchive_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_banks_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_banks_global_financials_and_ratios/financials_history_quarterly_banks_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_banks_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_banks_global_financials_and_ratios_eur/financials_history_quarterly_banks_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_banks_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_banks_global_financials_and_ratios_usd/financials_history_quarterly_banks_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_industry_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_industry_global_financials_and_ratios/financials_history_quarterly_industry_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_industry_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_industry_global_financials_and_ratios_eur/financials_history_quarterly_industry_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_industry_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_industry_global_financials_and_ratios_usd/financials_history_quarterly_industry_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_insurances_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_insurances_global_financials_and_ratios/financials_history_quarterly_insurances_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_insurances_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_insurances_global_financials_and_ratios_eur/financials_history_quarterly_insurances_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_insurances_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_insurances_global_financials_and_ratios_usd/financials_history_quarterly_insurances_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_key_financials",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_key_financials/financials_history_quarterly_key_financials_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_key_financials_eur",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_key_financials_eur/financials_history_quarterly_key_financials_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Quarterly)/financials_history_quarterly_key_financials_usd",
+    "url": "Orbis_202611_sample/Financials History (Quarterly)/financials_history_quarterly_key_financials_usd/financials_history_quarterly_key_financials_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/banks_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/banks_global_financials_and_ratios/banks_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/banks_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/banks_global_financials_and_ratios_eur/banks_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/banks_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/banks_global_financials_and_ratios_usd/banks_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/industry_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/industry_global_financials_and_ratios/industry_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/industry_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/industry_global_financials_and_ratios_eur/industry_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/industry_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/industry_global_financials_and_ratios_usd/industry_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/insurances_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/insurances_global_financials_and_ratios/insurances_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/insurances_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/insurances_global_financials_and_ratios_eur/insurances_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/insurances_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/insurances_global_financials_and_ratios_usd/insurances_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/key_financials",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/key_financials/key_financials_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/key_financials_eur",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/key_financials_eur/key_financials_eur_sample100.parquet"
+  },
+  {
+    "name": "Financials History (Semi-Annual)/key_financials_usd",
+    "url": "Orbis_202611_sample/Financials History (Semi-Annual)/key_financials_usd/key_financials_usd_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/additional_company_info",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/additional_company_info/additional_company_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/all_addresses",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/all_addresses/all_addresses_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/bvd_id_and_name",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/bvd_id_and_name/bvd_id_and_name_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/contact_info",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/contact_info/contact_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/industry_classifications",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/industry_classifications/industry_classifications_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/legal_info",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/legal_info/legal_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/overviews",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/overviews/overviews_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/statushistory",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/statushistory/statushistory_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Delta)/trade_description",
+    "url": "Orbis_202611_sample/Firmographics (Delta)/trade_description/trade_description_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/additional_company_info",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/additional_company_info/additional_company_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/all_addresses",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/all_addresses/all_addresses_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/bvd_id_and_name",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/bvd_id_and_name/bvd_id_and_name_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/contact_info",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/contact_info/contact_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/industry_classifications",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/industry_classifications/industry_classifications_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/legal_info",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/legal_info/legal_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/overviews",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/overviews/overviews_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/statushistory",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/statushistory/statushistory_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Monthly)/trade_description",
+    "url": "Orbis_202611_sample/Firmographics (Monthly)/trade_description/trade_description_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/additional_company_info",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/additional_company_info/additional_company_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/all_addresses",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/all_addresses/all_addresses_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/bvd_id_and_name",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/bvd_id_and_name/bvd_id_and_name_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/contact_info",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/contact_info/contact_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/industry_classifications",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/industry_classifications/industry_classifications_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/legal_info",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/legal_info/legal_info_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/overviews",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/overviews/overviews_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/statushistory",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/statushistory/statushistory_sample100.parquet"
+  },
+  {
+    "name": "Firmographics (Semi-Annual)/trade_description",
+    "url": "Orbis_202611_sample/Firmographics (Semi-Annual)/trade_description/trade_description_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Delta)/giin",
+    "url": "Orbis_202611_sample/Identifiers (Delta)/giin/giin_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Delta)/identifiers",
+    "url": "Orbis_202611_sample/Identifiers (Delta)/identifiers/identifiers_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Delta)/lei_details",
+    "url": "Orbis_202611_sample/Identifiers (Delta)/lei_details/lei_details_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Delta)/orbisid",
+    "url": "Orbis_202611_sample/Identifiers (Delta)/orbisid/orbisid_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Monthly)/giin",
+    "url": "Orbis_202611_sample/Identifiers (Monthly)/giin/giin_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Monthly)/identifiers",
+    "url": "Orbis_202611_sample/Identifiers (Monthly)/identifiers/identifiers_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Monthly)/lei_details",
+    "url": "Orbis_202611_sample/Identifiers (Monthly)/lei_details/lei_details_sample100.parquet"
+  },
+  {
+    "name": "Identifiers (Monthly)/orbisid",
+    "url": "Orbis_202611_sample/Identifiers (Monthly)/orbisid/orbisid_sample100.parquet"
+  },
+  {
+    "name": "Key Financials (Monthly)/key_financials",
+    "url": "Orbis_202611_sample/Key Financials (Monthly)/key_financials/key_financials_sample100.parquet"
+  },
+  {
+    "name": "Key Financials (Monthly)/key_financials_eur",
+    "url": "Orbis_202611_sample/Key Financials (Monthly)/key_financials_eur/key_financials_eur_sample100.parquet"
+  },
+  {
+    "name": "Key Financials (Monthly)/key_financials_usd",
+    "url": "Orbis_202611_sample/Key Financials (Monthly)/key_financials_usd/key_financials_usd_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/all_current_shareholders_first_level",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/all_current_shareholders_first_level/all_current_shareholders_first_level_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/all_subsidiaries_first_level",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/all_subsidiaries_first_level/all_subsidiaries_first_level_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/basic_shareholder_info",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/basic_shareholder_info/basic_shareholder_info_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/branches",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/branches/branches_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/controlling_shareholders",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/controlling_shareholders/controlling_shareholders_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/hq",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/hq/hq_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Delta)/orbis_delta_shareholders_bvdid_uci",
+    "url": "Orbis_202611_sample/Key Ownership (Delta)/orbis_delta_shareholders_bvdid_uci/orbis_delta_shareholders_bvdid_uci_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/all_current_shareholders_first_level",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/all_current_shareholders_first_level/all_current_shareholders_first_level_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/all_subsidiaries_first_level",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/all_subsidiaries_first_level/all_subsidiaries_first_level_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/basic_shareholder_info",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/basic_shareholder_info/basic_shareholder_info_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/branches",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/branches/branches_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/controlling_shareholders",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/controlling_shareholders/controlling_shareholders_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/hq",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/hq/hq_sample100.parquet"
+  },
+  {
+    "name": "Key Ownership (Monthly)/orbis_monthly_shareholders_bvdid_uci",
+    "url": "Orbis_202611_sample/Key Ownership (Monthly)/orbis_monthly_shareholders_bvdid_uci/orbis_monthly_shareholders_bvdid_uci_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/cash_flow_non_us_industries",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/cash_flow_non_us_industries/cash_flow_non_us_industries_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/cash_flow_non_us_industries_eur",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/cash_flow_non_us_industries_eur/cash_flow_non_us_industries_eur_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/cash_flow_non_us_industries_usd",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/cash_flow_non_us_industries_usd/cash_flow_non_us_industries_usd_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/cash_flow_us_industries",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/cash_flow_us_industries/cash_flow_us_industries_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/cash_flow_us_industries_eur",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/cash_flow_us_industries_eur/cash_flow_us_industries_eur_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/cash_flow_us_industries_usd",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/cash_flow_us_industries_usd/cash_flow_us_industries_usd_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/detailed_format_industries",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/detailed_format_industries/detailed_format_industries_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/detailed_format_industries_eur",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/detailed_format_industries_eur/detailed_format_industries_eur_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/detailed_format_industries_usd",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/detailed_format_industries_usd/detailed_format_industries_usd_sample100.parquet"
+  },
+  {
+    "name": "Listed Financials (Monthly)/segment_data",
+    "url": "Orbis_202611_sample/Listed Financials (Monthly)/segment_data/segment_data_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_bvd_id_and_name",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_bvd_id_and_name/orbis_academics_quarterly_bvd_id_and_name_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries/orbis_academics_quarterly_cash_flow_non_us_industries_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_eur",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_eur/orbis_academics_quarterly_cash_flow_non_us_industries_eur_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_eur_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_eur_interim/orbis_academics_quarterly_cash_flow_non_us_industries_eur_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_interim/orbis_academics_quarterly_cash_flow_non_us_industries_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_usd",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_usd/orbis_academics_quarterly_cash_flow_non_us_industries_usd_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_usd_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_non_us_industries_usd_interim/orbis_academics_quarterly_cash_flow_non_us_industries_usd_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries/orbis_academics_quarterly_cash_flow_us_industries_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_eur",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_eur/orbis_academics_quarterly_cash_flow_us_industries_eur_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_eur_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_eur_interim/orbis_academics_quarterly_cash_flow_us_industries_eur_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_interim/orbis_academics_quarterly_cash_flow_us_industries_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_usd",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_usd/orbis_academics_quarterly_cash_flow_us_industries_usd_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_usd_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_cash_flow_us_industries_usd_interim/orbis_academics_quarterly_cash_flow_us_industries_usd_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_contact_info",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_contact_info/orbis_academics_quarterly_contact_info_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries/orbis_academics_quarterly_detailed_format_industries_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_eur",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_eur/orbis_academics_quarterly_detailed_format_industries_eur_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_eur_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_eur_interim/orbis_academics_quarterly_detailed_format_industries_eur_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_interim/orbis_academics_quarterly_detailed_format_industries_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_usd",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_usd/orbis_academics_quarterly_detailed_format_industries_usd_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_usd_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_detailed_format_industries_usd_interim/orbis_academics_quarterly_detailed_format_industries_usd_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_identifiers",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_identifiers/orbis_academics_quarterly_identifiers_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_classifications",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_classifications/orbis_academics_quarterly_industry_classifications_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios/orbis_academics_quarterly_industry_global_financials_and_ratios_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_eur",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_eur/orbis_academics_quarterly_industry_global_financials_and_ratios_eur_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_eur_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_eur_interim/orbis_academics_quarterly_industry_global_financials_and_ratios_eur_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_interim/orbis_academics_quarterly_industry_global_financials_and_ratios_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_usd",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_usd/orbis_academics_quarterly_industry_global_financials_and_ratios_usd_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_usd_interim",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_industry_global_financials_and_ratios_usd_interim/orbis_academics_quarterly_industry_global_financials_and_ratios_usd_interim_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_key_financials",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_key_financials/orbis_academics_quarterly_key_financials_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_key_financials_eur",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_key_financials_eur/orbis_academics_quarterly_key_financials_eur_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_key_financials_usd",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_key_financials_usd/orbis_academics_quarterly_key_financials_usd_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_legal_info",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_legal_info/orbis_academics_quarterly_legal_info_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_overviews",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_overviews/orbis_academics_quarterly_overviews_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_statushistory",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_statushistory/orbis_academics_quarterly_statushistory_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_stock_exchanges_and_indexes",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_stock_exchanges_and_indexes/orbis_academics_quarterly_stock_exchanges_and_indexes_sample100.parquet"
+  },
+  {
+    "name": "Orbis Academics (Quarterly)/orbis_academics_quarterly_trade_description",
+    "url": "Orbis_202611_sample/Orbis Academics (Quarterly)/orbis_academics_quarterly_trade_description/orbis_academics_quarterly_trade_description_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/entities",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/entities/entities_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2007",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2007/links_2007_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2008",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2008/links_2008_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2009",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2009/links_2009_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2010",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2010/links_2010_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2011",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2011/links_2011_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2012",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2012/links_2012_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2013",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2013/links_2013_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2014",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2014/links_2014_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2015",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2015/links_2015_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2016",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2016/links_2016_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2017",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2017/links_2017_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2018",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2018/links_2018_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2019",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2019/links_2019_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2020",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2020/links_2020_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2021",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2021/links_2021_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2022",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2022/links_2022_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2023",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2023/links_2023_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2024",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2024/links_2024_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_2025",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_2025/links_2025_sample100.parquet"
+  },
+  {
+    "name": "Ownership History (Semi-Annual)/links_current",
+    "url": "Orbis_202611_sample/Ownership History (Semi-Annual)/links_current/links_current_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/companies_counts",
+    "url": "Orbis_202611_sample/Patents (Monthly)/companies_counts/companies_counts_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/companies_headers",
+    "url": "Orbis_202611_sample/Patents (Monthly)/companies_headers/companies_headers_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/litigations_headers_standard",
+    "url": "Orbis_202611_sample/Patents (Monthly)/litigations_headers_standard/litigations_headers_standard_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/litigations_parties",
+    "url": "Orbis_202611_sample/Patents (Monthly)/litigations_parties/litigations_parties_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/litigations_patents",
+    "url": "Orbis_202611_sample/Patents (Monthly)/litigations_patents/litigations_patents_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/litigations_products",
+    "url": "Orbis_202611_sample/Patents (Monthly)/litigations_products/litigations_products_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_backwardcitations",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_backwardcitations/patents_backwardcitations_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_cpc",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_cpc/patents_cpc_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_familymembers",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_familymembers/patents_familymembers_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_forwardcitations",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_forwardcitations/patents_forwardcitations_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_headers",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_headers/patents_headers_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_ipc",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_ipc/patents_ipc_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_matchings",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_matchings/patents_matchings_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_monthly_patentvalues_companylevel",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_monthly_patentvalues_companylevel/patents_monthly_patentvalues_companylevel_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_oppositions",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_oppositions/patents_oppositions_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_parties",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_parties/patents_parties_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_patpublnnrs_previous",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_patpublnnrs_previous/patents_patpublnnrs_previous_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_titles",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_titles/patents_titles_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_transactions",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_transactions/patents_transactions_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patents_uspc",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patents_uspc/patents_uspc_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patentvalues_companylevel",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patentvalues_companylevel/patentvalues_companylevel_sample100.parquet"
+  },
+  {
+    "name": "Patents (Monthly)/patentvalues_patentlevel",
+    "url": "Orbis_202611_sample/Patents (Monthly)/patentvalues_patentlevel/patentvalues_patentlevel_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_companies_counts",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_companies_counts/patents_yearly_companies_counts_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_companies_headers",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_companies_headers/patents_yearly_companies_headers_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_litigations_headers_standard",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_litigations_headers_standard/patents_yearly_litigations_headers_standard_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_litigations_parties",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_litigations_parties/patents_yearly_litigations_parties_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_litigations_patents",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_litigations_patents/patents_yearly_litigations_patents_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_litigations_products",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_litigations_products/patents_yearly_litigations_products_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_backwardcitations",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_backwardcitations/patents_yearly_patents_backwardcitations_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_cpc",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_cpc/patents_yearly_patents_cpc_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_familymembers",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_familymembers/patents_yearly_patents_familymembers_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_forwardcitations",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_forwardcitations/patents_yearly_patents_forwardcitations_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_headers",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_headers/patents_yearly_patents_headers_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_ipc",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_ipc/patents_yearly_patents_ipc_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_matchings",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_matchings/patents_yearly_patents_matchings_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_oppositions",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_oppositions/patents_yearly_patents_oppositions_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_parties",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_parties/patents_yearly_patents_parties_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_patpublnnrs_previous",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_patpublnnrs_previous/patents_yearly_patents_patpublnnrs_previous_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_titles",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_titles/patents_yearly_patents_titles_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_transactions",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_transactions/patents_yearly_patents_transactions_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patents_uspc",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patents_uspc/patents_yearly_patents_uspc_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patentvalues_companylevel",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patentvalues_companylevel/patents_yearly_patentvalues_companylevel_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patentvalues_companylevel___obsolete",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patentvalues_companylevel___obsolete/patents_yearly_patentvalues_companylevel___obsolete_sample100.parquet"
+  },
+  {
+    "name": "Patents (Yearly)/patents_yearly_patentvalues_patentlevel",
+    "url": "Orbis_202611_sample/Patents (Yearly)/patents_yearly_patentvalues_patentlevel/patents_yearly_patentvalues_patentlevel_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Delta)/stock_exchanges_and_indexes",
+    "url": "Orbis_202611_sample/Stock Data (Delta)/stock_exchanges_and_indexes/stock_exchanges_and_indexes_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Monthly)/orbis_monthly_annual_stock_valuation_annual_stock_data",
+    "url": "Orbis_202611_sample/Stock Data (Monthly)/orbis_monthly_annual_stock_valuation_annual_stock_data/orbis_monthly_annual_stock_valuation_annual_stock_data_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Monthly)/orbis_monthly_monthly_information",
+    "url": "Orbis_202611_sample/Stock Data (Monthly)/orbis_monthly_monthly_information/orbis_monthly_monthly_information_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Monthly)/orbis_monthly_security_stock_information_and_current_stock_information",
+    "url": "Orbis_202611_sample/Stock Data (Monthly)/orbis_monthly_security_stock_information_and_current_stock_information/orbis_monthly_security_stock_information_and_current_stock_information_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Monthly)/orbis_monthly_stock_exchanges_and_indexes",
+    "url": "Orbis_202611_sample/Stock Data (Monthly)/orbis_monthly_stock_exchanges_and_indexes/orbis_monthly_stock_exchanges_and_indexes_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Monthly)/orbis_monthly_weekly_pricing_series",
+    "url": "Orbis_202611_sample/Stock Data (Monthly)/orbis_monthly_weekly_pricing_series/orbis_monthly_weekly_pricing_series_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Weekly)/annual_stock_valuation_annual_stock_data",
+    "url": "Orbis_202611_sample/Stock Data (Weekly)/annual_stock_valuation_annual_stock_data/annual_stock_valuation_annual_stock_data_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Weekly)/monthly_information",
+    "url": "Orbis_202611_sample/Stock Data (Weekly)/monthly_information/monthly_information_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Weekly)/security_stock_information_and_current_stock_information",
+    "url": "Orbis_202611_sample/Stock Data (Weekly)/security_stock_information_and_current_stock_information/security_stock_information_and_current_stock_information_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Weekly)/stock_exchanges_and_indexes",
+    "url": "Orbis_202611_sample/Stock Data (Weekly)/stock_exchanges_and_indexes/stock_exchanges_and_indexes_sample100.parquet"
+  },
+  {
+    "name": "Stock Data (Weekly)/weekly_pricing_series",
+    "url": "Orbis_202611_sample/Stock Data (Weekly)/weekly_pricing_series/weekly_pricing_series_sample100.parquet"
+  }
+]
