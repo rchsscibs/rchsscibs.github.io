@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>大型 Parquet 資料瀏覽器｜純網頁版</title>
+<title>Qrbis Sample Data</title>
 <style>
 :root {
   color-scheme: light;
@@ -50,11 +50,19 @@ button:disabled { cursor: not-allowed; opacity: .5; }
 small { color: var(--muted); }
 #schemaTable { max-height: 400px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
 table { border-collapse: collapse; width: 100%; font-size: 13px; }
-th, td { padding: 10px 11px; border-bottom: 1px solid #e8edf2; text-align: left; white-space: nowrap; }
+/* 所有欄位名稱、dtype 與資料內容完整顯示；長文字自動換行，不使用省略號。 */
+th, td { padding: 10px 11px; border-bottom: 1px solid #e8edf2; text-align: left; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; vertical-align: top; }
 th { background: #f5f7fa; position: sticky; top: 0; z-index: 1; color: #3b516c; font-weight: 650; }
-td { max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
+td { max-width: none; overflow: visible; text-overflow: clip; }
 tbody tr:nth-child(even) { background: #fafbfc; }
+/* Schema 表：在左側面板內換行顯示完整欄位名稱與 DuckDB dtype。 */
+#schemaTable table { width: 100%; table-layout: fixed; }
+#schemaTable th:first-child, #schemaTable td:first-child { width: 54%; }
+#schemaTable th:last-child, #schemaTable td:last-child { width: 46%; }
+/* 資料預覽：所有欄位均保留，寬表格可水平捲動、長儲存格換行呈現全文。 */
 .tablewrap { width: 100%; max-height: 520px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
+#previewBox table { width: max-content; min-width: 100%; }
+#previewBox th, #previewBox td { min-width: 140px; max-width: 420px; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; overflow: visible; text-overflow: clip; }
 /* 可拖曳的括號樹：每個群組自身就是一對 SQL 括號。 */
 .logic-root { margin: 14px 0 15px; border: 1px solid #d8e4f3; border-radius: 10px; padding: 13px; background: #fafcff; }
 .logic-root-head { display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; margin-bottom: 7px; }
@@ -167,7 +175,7 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
 </style>
 </head>
 <body>
-<header><div class="header-inner"><h1>🗂️ 大型 Parquet 資料瀏覽器 <span class="badge">v9.1</span></h1></div></header>
+<header><div class="header-inner"><h1>Qrbis Sample Data 瀏覽器</h1></div></header>
 <div class="layout">
   <aside>
     <div class="panel">
@@ -228,7 +236,7 @@ code { font-family: ui-monospace, Consolas, monospace; background: #eef3fa; bord
         <div class="pagination-fields">
           <div class="formgroup pagination-size">
             <label for="pageSize">每頁筆數</label>
-            <select id="pageSize"><option>20</option><option selected>50</option><option>100</option><option>200</option></select>
+            <select id="pageSize"><option>20</option><option>50</option><option selected>100</option><option>200</option></select>
           </div>
           <div class="formgroup pagination-page">
             <label for="pageNumber">目前頁碼</label>
