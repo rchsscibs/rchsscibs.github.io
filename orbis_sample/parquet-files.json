@@ -12,26 +12,6 @@
     "url": "Orbis_202611_sample/BvD ID Changes/bvd_id_changes_full/bvd_id_changes_full_sample100.parquet"
   },
   {
-    "name": "Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_additional",
-    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_additional/crossborder_investment__monthly__ocbi_projects_additional_sample100.parquet"
-  },
-  {
-    "name": "Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_dates",
-    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/crossborder_investment__monthly__ocbi_projects_dates/crossborder_investment__monthly__ocbi_projects_dates_sample100.parquet"
-  },
-  {
-    "name": "Crossborder Investment (Monthly)/ocbi_companies",
-    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/ocbi_companies/ocbi_companies_sample100.parquet"
-  },
-  {
-    "name": "Crossborder Investment (Monthly)/ocbi_deals",
-    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/ocbi_deals/ocbi_deals_sample100.parquet"
-  },
-  {
-    "name": "Crossborder Investment (Monthly)/ocbi_projects",
-    "url": "Orbis_202611_sample/Crossborder Investment (Monthly)/ocbi_projects/ocbi_projects_sample100.parquet"
-  },
-  {
     "name": "Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios",
     "url": "Orbis_202611_sample/Detailed Financials (Monthly)/orbis_monthly_banks_global_financials_and_ratios/orbis_monthly_banks_global_financials_and_ratios_sample100.parquet"
   },
