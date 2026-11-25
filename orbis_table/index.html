@@ -107,14 +107,19 @@ p {line-height:1.8}
 .stats-table th:nth-child(7) {width:11%}.stats-table th:nth-child(8) {width:11%}.stats-table th:nth-child(9) {width:12%}
 .stats-table .name {text-align:left;font-weight:730;color:#245269;line-height:1.5;overflow-wrap:anywhere}
 .stats-table .type {text-align:left}
-/* 只在有 Dictionary 描述的 Column Name 啟用 Hover / keyboard tooltip。 */
-.column-help {cursor:help;display:inline;outline-offset:3px;text-decoration:underline dotted #53a89d;text-underline-offset:3px;text-decoration-thickness:1px}
+/* 有 Dictionary 描述的欄位：滑入預覽、點擊固定，浮窗可捲動。 */
+.column-help {cursor:pointer;display:inline;border:0;background:none;padding:0;color:inherit;font:inherit;text-align:left;overflow-wrap:anywhere;outline-offset:3px;text-decoration:underline dotted #53a89d;text-underline-offset:3px;text-decoration-thickness:1px}
 .column-help:hover,.column-help:focus-visible {color:#087e73;text-decoration-color:#087e73}
 .column-help:focus-visible {outline:2px solid #40aa9d;border-radius:3px}
 .column-help-icon {font-size:11px;color:#0c9286;white-space:nowrap;margin-left:5px;text-decoration:none}
-.column-tooltip {position:fixed;z-index:1000;width:min(360px,calc(100vw - 24px));max-height:min(50vh,320px);overflow:hidden;pointer-events:auto;background:#fff;color:#284254;border:1px solid #dce8e8;border-radius:11px;box-shadow:0 10px 34px #102d3f28;padding:13px 15px;line-height:1.65;overflow-wrap:anywhere}
-.column-tooltip-title {font-weight:780;font-size:12px;color:#0e8278;border-bottom:1px solid #ecf0f1;padding-bottom:7px;margin-bottom:8px;word-break:break-word}
-.column-tooltip-body {font-size:12px;white-space:pre-wrap;overflow-y:auto;max-height:calc(min(50vh,320px) - 68px)}
+.column-tooltip {position:fixed;z-index:1000;width:min(360px,calc(100vw - 24px));max-height:min(65vh,460px,calc(100vh - 24px));display:flex;flex-direction:column;overflow:hidden;pointer-events:auto;background:#fff;color:#284254;border:1px solid #dce8e8;border-radius:11px;box-shadow:0 10px 34px #102d3f28;padding:13px 15px;line-height:1.65;overflow-wrap:anywhere}
+.column-tooltip-head {display:flex;align-items:flex-start;gap:8px;justify-content:space-between;flex:0 0 auto;border-bottom:1px solid #ecf0f1;padding-bottom:7px;margin-bottom:8px}
+.column-tooltip-title {font-weight:780;font-size:12px;color:#0e8278;word-break:break-word;min-width:0}
+.column-tooltip-close {border:0;background:none;color:#547487;font-size:19px;line-height:1;padding:0 3px;flex:none;border-radius:4px}
+.column-tooltip-close:hover {background:#edf7f5;color:#087e73}
+.column-tooltip-body {font-size:12px;white-space:pre-wrap;overflow-y:auto;min-height:0;overscroll-behavior:contain;scrollbar-gutter:stable;user-select:text}
+.column-tooltip-foot {flex:0 0 auto;font-size:10px;color:#718497;border-top:1px solid #ecf0f1;margin-top:8px;padding-top:6px}
+.column-help[aria-expanded="true"] {color:#087e73}
 .type-pill {font-size:10px;background:#eaf3fc;color:#437d9a;border:1px solid #dde9f4;border-radius:5px;padding:3px 4px;display:inline-block;overflow-wrap:anywhere}
 .type-pill.numeric {background:#f0eefb;border-color:#e5dffc;color:#7a62a5}
 .type-pill.time {background:#fff2e9;border-color:#f8e3d6;color:#a76e47}
@@ -192,9 +197,10 @@ p {line-height:1.8}
   </aside>
   <main id="main" class="main"><div id="content" class="page"></div></main>
 </div>
-<div id="column-tooltip" class="column-tooltip" role="tooltip" hidden>
-  <div id="column-tooltip-title" class="column-tooltip-title"></div>
-  <div id="column-tooltip-body" class="column-tooltip-body"></div>
+<div id="column-tooltip" class="column-tooltip" role="dialog" aria-labelledby="column-tooltip-title" hidden>
+  <div class="column-tooltip-head"><div id="column-tooltip-title" class="column-tooltip-title"></div><button type="button" id="column-tooltip-close" class="column-tooltip-close" aria-label="關閉欄位描述">×</button></div>
+  <div id="column-tooltip-body" class="column-tooltip-body" tabindex="0" role="region" aria-label="欄位描述（可捲動）"></div>
+  <div id="column-tooltip-foot" class="column-tooltip-foot"></div>
 </div>
 <script id="viewer-config" type="application/json">
 {"encryptedPath":"./data.enc.json"}
@@ -205,7 +211,7 @@ p {line-height:1.8}
  const CONFIG=JSON.parse($('viewer-config').textContent);
  const STAT_NAMES=['DATA_TYPE','ROW_COUNT','VALID_COUNT','NULL_COUNT','MIN','MAX','AVG','STDDEV','VARIANCE'];
  let catalog=null, dbIndex=-1, tableIndex=-1, pending=false;
- let tooltipTrigger=null;
+ let tooltipTrigger=null, tooltipPinned=false, tooltipTimer=null;
  const safe=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const format=(v)=>{let s=String(v??''); if(!s)return '<span class="dim">—</span>';return safe(/^-?\d+$/.test(s) ? s.replace(/\B(?=(\d{3})+(?!\d))/g,',') : s);};
  const plainNum=(v)=>String(v??'').replace(/\B(?=(\d{3})+(?!\d))/g,',');
@@ -366,62 +372,117 @@ p {line-height:1.8}
    const rows=t.cols.map((c,i)=>{
      const name=safe(c[0]).replace(/_/g,'_<wbr>');
      const hasDescription=Object.prototype.hasOwnProperty.call(descriptions,c[0]) && typeof descriptions[c[0]]==='string' && !!descriptions[c[0]].trim();
-     const label=hasDescription?`<span class="column-help" data-col="${i}" tabindex="0" aria-describedby="column-tooltip">${name}<span class="column-help-icon" aria-hidden="true">ⓘ</span></span>`:name;
+     const label=hasDescription?`<button type="button" class="column-help" data-col="${i}" aria-haspopup="dialog" aria-controls="column-tooltip" aria-expanded="false">${name}<span class="column-help-icon" aria-hidden="true">ⓘ</span></button>`:name;
      return `<tr><td class="name" data-label="COLUMN NAME">${label}</td><td class="type" data-label="DATA_TYPE"><span class="type-pill ${typeBadge(c[1])}">${safe(c[1])}</span></td>${['VALID_COUNT','NULL_COUNT','MIN','MAX','AVG','STDDEV','VARIANCE'].map((field,j)=>`<td data-label="${field}">${format(c[j+2])}</td>`).join('')}</tr>`;
    }).join('');
    $('content').innerHTML=`${crumb(db,t)}<div class="eyebrow">TABLE DETAILS / COLUMN STATISTICS</div>
       <div class="titleline"><h1>${safe(t.name)}</h1><span class="version">${safe(catalog.version)}</span></div>
       <p style="color:#7c90a0;font-size:12px;margin:0 0 17px">所屬資料庫：${safe(db.name)}</p>
       <div class="info-grid">${info('ROW_COUNT / 資料列數',t.rows)}${info('COLUMN_COUNT / 欄位數',t.cols.length)}${info('統計資料來源','CSV')}</div>
-      <div class="table-actions"><div><h2>Column Statistics</h2><p>欄位名稱、型態及所有統計數值${filled?` · 滑鼠移到 ⓘ 欄位名稱可查看描述（${filled} 個欄位）`:''}</p></div><button class="btn" data-db="${dbIndex}" type="button">← 返回 Tables</button></div>
+      <div class="table-actions"><div><h2>Column Statistics</h2><p>欄位名稱、型態及所有統計數值${filled?` · 滑鼠移到 ⓘ 欄位可預覽、點擊可固定描述（${filled} 個欄位）`:''}</p></div><button class="btn" data-db="${dbIndex}" type="button">← 返回 Tables</button></div>
       <div class="stats-wrap"><table class="stats-table"><thead><tr><th class="name">COLUMN NAME</th><th class="type">DATA_TYPE</th><th>VALID_COUNT</th><th>NULL_COUNT</th><th>MIN</th><th>MAX</th><th>AVG</th><th>STDDEV</th><th>VARIANCE</th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="smallnote">ROW_COUNT 已列於上方；「—」表示 CSV 原始統計值為空白。所有統計數字保留原值。</p>`;
  }
- function showColumnTooltip(trigger){
+ function cancelTooltipHide(){
+   if(tooltipTimer!==null){clearTimeout(tooltipTimer);tooltipTimer=null;}
+ }
+ function updateTooltipHint(){
+   $('column-tooltip-foot').textContent=tooltipPinned?'已固定 · 點擊 ×、外部或按 Esc 關閉':'可移入浮窗捲動閱讀 · 點擊欄位可固定';
+ }
+ function positionColumnTooltip(){
+   if(!tooltipTrigger || !tooltipTrigger.isConnected)return;
+   const tooltip=$('column-tooltip');
+   const anchor=tooltipTrigger.getBoundingClientRect();
+   const gap=6, margin=12;
+   tooltip.style.maxHeight='';
+   const natural=tooltip.getBoundingClientRect();
+   const below=window.innerHeight-margin-anchor.bottom-gap;
+   const above=anchor.top-gap-margin;
+   const openAbove=natural.height>below && above>below;
+   const room=openAbove?above:below;
+   if(room>=120)tooltip.style.maxHeight=Math.min(natural.height,room)+'px';
+   const box=tooltip.getBoundingClientRect();
+   const left=Math.max(margin,Math.min(anchor.left,window.innerWidth-box.width-margin));
+   let top=openAbove?anchor.top-box.height-gap:anchor.bottom+gap;
+   top=Math.max(margin,Math.min(top,window.innerHeight-box.height-margin));
+   tooltip.style.left=left+'px';
+   tooltip.style.top=top+'px';
+ }
+ function showColumnTooltip(trigger,pin=false){
    if(!catalog || dbIndex<0 || tableIndex<0)return;
+   cancelTooltipHide();
+   if(tooltipTrigger===trigger){
+     if(pin){tooltipPinned=true;updateTooltipHint();positionColumnTooltip();}
+     return;
+   }
+   if(tooltipPinned && !pin)return;
    const table=catalog.databases[dbIndex]?.tables[tableIndex];
    const column=table?.cols[Number(trigger.dataset.col)];
    const description=column && Object.prototype.hasOwnProperty.call(table.descriptions||{},column[0]) ? table.descriptions[column[0]] : '';
    if(typeof description!=='string' || !description.trim())return;
    const tooltip=$('column-tooltip');
+   if(tooltipTrigger)tooltipTrigger.setAttribute('aria-expanded','false');
+   tooltipTrigger=trigger;
+   tooltipPinned=pin;
+   trigger.setAttribute('aria-expanded','true');
    $('column-tooltip-title').textContent=column[0];
    $('column-tooltip-body').textContent=description;
+   updateTooltipHint();
    tooltip.hidden=false;
-   tooltipTrigger=trigger;
-   // position:fixed / body-level layer bypasses the stats table's overflow:clip.
-   const anchor=trigger.getBoundingClientRect();
-   const box=tooltip.getBoundingClientRect();
-   const gap=9;
-   const left=Math.max(12,Math.min(anchor.left,window.innerWidth-box.width-12));
-   let top=anchor.bottom+gap;
-   if(top+box.height>window.innerHeight-12)top=anchor.top-box.height-gap;
-   top=Math.max(12,Math.min(top,window.innerHeight-box.height-12));
-   tooltip.style.left=left+'px';
-   tooltip.style.top=top+'px';
+   $('column-tooltip-body').scrollTop=0;
+   positionColumnTooltip();
  }
- function hideColumnTooltip(){
-   tooltipTrigger=null;
+ function hideColumnTooltip(restoreFocus=false){
+   cancelTooltipHide();
+   const trigger=tooltipTrigger;
+   if(trigger)trigger.setAttribute('aria-expanded','false');
+   tooltipTrigger=null;tooltipPinned=false;
    $('column-tooltip').hidden=true;
+   if(restoreFocus && trigger?.isConnected)trigger.focus({preventScroll:true});
  }
- // Delegated events also work after page navigation / content rerenders.
+ function scheduleTooltipHide(){
+   cancelTooltipHide();
+   if(!tooltipTrigger || tooltipPinned)return;
+   tooltipTimer=setTimeout(()=>{
+     tooltipTimer=null;
+     if(!tooltipPinned && !$('column-tooltip').matches(':hover') && !tooltipTrigger?.matches(':hover'))hideColumnTooltip();
+   },450);
+ }
+ // 允許游標跨過欄位與浮窗之間的空隙；固定後只由明確操作關閉。
  $('content').addEventListener('pointerover',event=>{
+   if(event.pointerType==='touch')return;
    const trigger=event.target.closest?.('.column-help');
    if(trigger && !trigger.contains(event.relatedTarget))showColumnTooltip(trigger);
  });
  $('content').addEventListener('pointerout',event=>{
+   if(event.pointerType==='touch')return;
    const trigger=event.target.closest?.('.column-help');
-   if(trigger && !trigger.contains(event.relatedTarget) && tooltipTrigger===trigger)hideColumnTooltip();
+   if(trigger && !trigger.contains(event.relatedTarget) && tooltipTrigger===trigger && !$('column-tooltip').contains(event.relatedTarget))scheduleTooltipHide();
  });
- $('content').addEventListener('focusin',event=>{
+ $('column-tooltip').addEventListener('pointerenter',cancelTooltipHide);
+ $('column-tooltip').addEventListener('pointerleave',event=>{
+   if(!tooltipTrigger?.contains(event.relatedTarget))scheduleTooltipHide();
+ });
+ $('content').addEventListener('click',event=>{
    const trigger=event.target.closest?.('.column-help');
-   if(trigger)showColumnTooltip(trigger);
+   if(!trigger)return;
+   if(tooltipPinned && tooltipTrigger===trigger){hideColumnTooltip();return;}
+   showColumnTooltip(trigger,true);
+   if(event.detail===0)$('column-tooltip-body').focus({preventScroll:true});
  });
- $('content').addEventListener('focusout',event=>{
-   if(tooltipTrigger===event.target)hideColumnTooltip();
+ $('column-tooltip-close').addEventListener('click',()=>hideColumnTooltip(true));
+ document.addEventListener('click',event=>{
+   if(tooltipTrigger && !$('column-tooltip').contains(event.target) && !event.target.closest?.('.column-help'))hideColumnTooltip();
  });
- // Hide stale tips if the anchored column moves or is removed.
- window.addEventListener('scroll',hideColumnTooltip,true);
- window.addEventListener('resize',hideColumnTooltip);
+ document.addEventListener('keydown',event=>{
+   if(event.key==='Escape' && tooltipTrigger){event.preventDefault();hideColumnTooltip(true);}
+ });
+ // 浮窗內部捲動不應關閉浮窗；主頁捲動或視窗縮放時重新定位。
+ window.addEventListener('scroll',event=>{
+   if(!tooltipTrigger || $('column-tooltip').contains(event.target instanceof Node?event.target:null))return;
+   positionColumnTooltip();
+ },true);
+ window.addEventListener('resize',positionColumnTooltip);
  function renderAll(){
    hideColumnTooltip();
    if(!catalog){renderEmpty('資料尚未載入');return;}
